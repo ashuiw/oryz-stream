@@ -49,8 +49,7 @@ export default function MovieWatchPage() {
           <ArrowLeft size={16} /> Back
         </Link>
 
-        <div className="oryz-player-frame overflow-hidden rounded-[22px] border border-white/[0.08] bg-black shadow-2xl">
-          <div className="aspect-video w-full">
+        <div className="oryz-player-frame overflow-hidden rounded-[22px] border border-white/[0.08] bg-black p-3 shadow-2xl sm:p-4">
             <VidKingWatchFrame
               mediaType="movie"
               mediaId={movie.id}
@@ -60,7 +59,6 @@ export default function MovieWatchPage() {
               releaseDate={movie.release_date}
               voteAverage={movie.vote_average}
             />
-          </div>
         </div>
 
         <section className="mt-7 grid gap-6 rounded-[22px] border border-white/[0.06] bg-white/[0.02] p-4 sm:p-5 md:grid-cols-[180px_minmax(0,1fr)]">

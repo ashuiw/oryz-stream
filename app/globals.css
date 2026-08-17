@@ -87,3 +87,63 @@ img {
     border-radius: 16px;
   }
 }
+
+
+/* VidKing responsive embed: keep the cross-origin player at a stable 16:9 size
+   on phones/tablets instead of relying on a fixed desktop height. */
+.oryz-vidking-iframe-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+.oryz-vidking-iframe {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  border: 0;
+  background: #000;
+}
+
+@media (max-width: 640px) {
+  .oryz-watch-page {
+    overflow-x: hidden;
+  }
+
+  .oryz-player-frame {
+    width: 100%;
+    max-width: 100%;
+    margin-inline: 0;
+  }
+
+  .oryz-player-frame > .aspect-video {
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .oryz-vidking-iframe-wrap,
+  .oryz-vidking-iframe {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) and (orientation: landscape) {
+  .oryz-watch-page .oryz-player-frame {
+    border-radius: 0;
+  }
+}
+
+/* Watch server selector */
+.oryz-watch-page select option {
+  background: #111111;
+  color: #ffffff;
+}

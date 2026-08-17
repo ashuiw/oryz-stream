@@ -4,6 +4,9 @@ import { AuthProvider } from "@/components/auth/AuthProvider";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 
 export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
   themeColor: "#e50914",
 };
 

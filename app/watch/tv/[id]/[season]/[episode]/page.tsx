@@ -41,8 +41,7 @@ export default function TVWatchPage() {
       <Navbar />
       <main className="mx-auto w-[min(1280px,calc(100%-28px))] pb-16 pt-10 sm:w-[min(1280px,calc(100%-40px))] sm:pt-12">
         <Link href={`/shows`} className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-xs text-white/55 hover:text-white"><ArrowLeft size={16} /> Back to shows</Link>
-        <div className="oryz-player-frame overflow-hidden rounded-[22px] border border-white/[0.08] bg-black shadow-2xl">
-          <div className="aspect-video w-full">
+        <div className="oryz-player-frame overflow-hidden rounded-[22px] border border-white/[0.08] bg-black p-3 shadow-2xl sm:p-4">
             <VidKingWatchFrame
               mediaType="tv"
               mediaId={show.id}
@@ -55,7 +54,6 @@ export default function TVWatchPage() {
               episode={episodeNumber}
               episodeName={current?.name}
             />
-          </div>
         </div>
 
         <section className="mt-7 rounded-[22px] border border-white/[0.06] bg-white/[0.02] p-4 sm:p-5">
