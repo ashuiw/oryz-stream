@@ -4,7 +4,10 @@ import { useEffect, useMemo, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/components/auth/AuthProvider";
 
-type ServerOption = "server1" | "server2";
+type ServerOption =
+  | "server1"
+  | "server2"
+  | "server3";
 
 type PlayerEvent = {
   event?: string;
@@ -176,9 +179,13 @@ export default function WatchProgressTracker({
 
     window.addEventListener("message", onMessage);
 
-    const iframe = document.getElementById("screenscape-player") as HTMLIFrameElement | null;
-    if (server === "server2" && iframe) {
-      const requestHistory = () => {
+    const iframe =
+        document.getElementById(
+          "screenscape-player",
+        ) as HTMLIFrameElement | null;
+
+      if (server === "server3" && iframe) {
+            const requestHistory = () => {
         iframe.contentWindow?.postMessage(
           {
             type: "SCREENSCAPE_GET_WATCH_HISTORY_WITH_PROGRESS",
