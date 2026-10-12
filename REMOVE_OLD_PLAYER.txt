@@ -1,0 +1,1 @@
+IMPORTANT: The Oryz custom player has been removed. If you are replacing an older Oryz project by copying files over it (instead of extracting into a fresh directory), delete the old components/player/ directory before building. The current project intentionally does not contain components/player/OryzVideoPlayer.tsx.
