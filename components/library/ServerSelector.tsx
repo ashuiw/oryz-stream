@@ -105,6 +105,16 @@ export default function ServerSelector({
           >
             Server 3
           </option>
+
+          <option
+            value="server4"
+            className="
+              bg-[#111]
+              text-white
+            "
+          >
+            Server 4
+          </option>
         </select>
 
         <ChevronDown
