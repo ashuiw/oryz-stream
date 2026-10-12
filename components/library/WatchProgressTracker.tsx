@@ -4,10 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/components/auth/AuthProvider";
 
-type ServerOption =
-  | "server1"
-  | "server2"
-  | "server3";
+import type { ServerOption } from "./WatchPlayer";
 
 type PlayerEvent = {
   event?: string;
