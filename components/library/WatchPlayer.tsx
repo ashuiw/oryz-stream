@@ -20,7 +20,8 @@ type MediaType = "movie" | "tv";
 export type ServerOption =
   | "server1"
   | "server2"
-  | "server3";
+  | "server3"
+  | "server4";
 
 type WatchPlayerProps = {
   mediaType: MediaType;
@@ -42,11 +43,13 @@ type WatchPlayerProps = {
 const CINEMAOS_ORIGIN = "https://cinemaos.tech";
 const VIDKING_ORIGIN = "https://www.vidking.net";
 const SCREENSCAPE_ORIGIN = "https://screenscape.me";
+const FRAMEXTV_ORIGIN = "https://framextv.tech";
 
 const SERVERS: { id: ServerOption; name: string }[] = [
   { id: "server1", name: "Server 1" },
   { id: "server2", name: "Server 2" },
   { id: "server3", name: "Server 3" },
+  { id: "server4", name: "Server 4" },
 ];
 
 export default function WatchPlayer({
@@ -129,26 +132,39 @@ export default function WatchPlayer({
     return `${SCREENSCAPE_ORIGIN}/embed?${params.toString()}`;
   }, [mediaType, currentMediaId, currentSeason, currentEpisode]);
 
+  const frameXtvUrl = useMemo(() => {
+    if (mediaType === "tv") {
+      return `${FRAMEXTV_ORIGIN}/embed/${currentMediaId}/${currentSeason}/${currentEpisode}`;
+    }
+    return `${FRAMEXTV_ORIGIN}/embed/${currentMediaId}`;
+  }, [mediaType, currentMediaId, currentSeason, currentEpisode]);
+
   const activeUrl =
     selectedServer === "server1"
       ? cinemaUrl
       : selectedServer === "server2"
-        ? vidkingUrl
-        : screenscapeUrl;
+        ? frameXtvUrl
+        : selectedServer === "server3"
+          ? vidkingUrl
+          : screenscapeUrl;
 
   const activeOrigin =
     selectedServer === "server1"
       ? CINEMAOS_ORIGIN
       : selectedServer === "server2"
-        ? VIDKING_ORIGIN
-        : SCREENSCAPE_ORIGIN;
+        ? FRAMEXTV_ORIGIN
+        : selectedServer === "server3"
+          ? VIDKING_ORIGIN
+          : SCREENSCAPE_ORIGIN;
 
   const iframeId =
     selectedServer === "server1"
       ? "cinemaos-player"
       : selectedServer === "server2"
-        ? "vidking-player"
-        : "screenscape-player";
+        ? "framextv-player"
+        : selectedServer === "server3"
+          ? "vidking-player"
+          : "screenscape-player";
 
   const activeServer = SERVERS.find((server) => server.id === selectedServer);
   const activeServerName = activeServer?.name ?? "Server 1";
