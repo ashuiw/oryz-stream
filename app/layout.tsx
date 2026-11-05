@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import BackToTop from "@/components/BackToTop";
+import WhatsNewModal from "@/components/WhatsNewModal";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -61,6 +62,7 @@ export default function RootLayout({
         <ServiceWorkerRegistration />
         <AuthProvider>{children}</AuthProvider>
         <BackToTop />
+        <WhatsNewModal />
       </body>
     </html>
   );
