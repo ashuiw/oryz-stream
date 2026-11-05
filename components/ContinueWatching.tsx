@@ -39,7 +39,7 @@ export default function ContinueWatching() {
       .gt("position_seconds", 5)
       .order("updated_at", { ascending: false })
       .limit(12)
-      .then(({ data, error }) => {
+      .then(({ data, error }: { data: unknown[] | null; error: unknown }) => {
         if (!cancelled && !error) setRows((data || []) as Row[]);
       });
     return () => {
