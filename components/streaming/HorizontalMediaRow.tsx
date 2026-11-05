@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "@/components/ui/icons";
 import { useRef } from "react";
 import MediaCard from "./MediaCard";
 import type { MediaItem } from "./types";

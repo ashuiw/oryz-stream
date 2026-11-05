@@ -88,7 +88,7 @@ export default function OttSelector({
               items-center
               justify-center
               overflow-hidden
-              rounded-2xl
+              rounded-lg
               border
               border-white/[0.06]
               bg-ink-2

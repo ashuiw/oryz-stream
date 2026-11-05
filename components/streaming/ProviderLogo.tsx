@@ -26,14 +26,14 @@ export default function ProviderLogo({
 
   if (!logo) {
     return (
-      <div className={`${large ? "h-24 w-24" : "h-16 w-16"} flex items-center justify-center rounded-2xl bg-white/10 text-sm font-semibold text-white`}>
+      <div className={`${large ? "h-24 w-24" : "h-16 w-16"} flex items-center justify-center rounded-lg bg-white/10 text-sm font-semibold text-white`}>
         {provider.provider_name.slice(0, 2).toUpperCase()}
       </div>
     );
   }
 
   return (
-    <div className={`${large ? "h-24 w-24" : "h-16 w-16"} flex items-center justify-center overflow-hidden rounded-2xl bg-white/10 p-2`}>
+    <div className={`${large ? "h-24 w-24" : "h-16 w-16"} flex items-center justify-center overflow-hidden rounded-lg bg-white/10 p-2`}>
       <Image
         src={logo}
         alt={provider.provider_name}

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Search, Home, Film, Tv, Sparkles, Bookmark, Layers, LogIn } from "lucide-react";
+import { Search, Home, Film, Tv, Sparkles, Bookmark, Layers, LogIn } from "@/components/ui/icons";
 import AuthStatus from "@/components/auth/AuthStatus";
 import { useAuth } from "@/components/auth/AuthProvider";
 import Avatar from "@/components/auth/Avatar";
@@ -27,16 +27,16 @@ function isActive(pathname: string, href: string) {
 
 function MobileAuth() {
   const { user, profile, loading } = useAuth();
-  if (loading) return <div className="h-10 w-10 animate-pulse rounded-full bg-white/10" />;
+  if (loading) return <div className="h-9 w-9 animate-pulse rounded-full bg-white/10" />;
   if (!user) {
     return (
-      <Link href="/login" aria-label="Sign in" className="grid h-10 w-10 place-items-center rounded-xl border border-gold-400/40 text-gold-300 transition hover:bg-gold-400/10">
-        <LogIn size={17} />
+      <Link href="/login" aria-label="Sign in" className="grid h-9 w-9 place-items-center rounded-md border border-white/20 text-white/80">
+        <LogIn size={18} weight="duotone" />
       </Link>
     );
   }
   return (
-    <Link href="/library" aria-label="Open your library" className="grid h-10 w-10 place-items-center overflow-hidden rounded-full border border-gold-400/40 bg-gold-500 text-xs font-bold text-ink">
+    <Link href="/library" aria-label="Open your library" className="grid h-9 w-9 place-items-center overflow-hidden rounded-full bg-gold-500 text-xs font-bold text-ink">
       <Avatar urls={[profile?.avatar_url, user.user_metadata?.avatar_url, user.user_metadata?.picture]} fallback={profile?.display_name || user.email || "U"} className="h-full w-full object-cover" />
     </Link>
   );
@@ -49,7 +49,7 @@ export default function Navbar() {
   const watching = pathname.startsWith("/watch");
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -60,10 +60,6 @@ export default function Navbar() {
     document.body.classList.toggle("no-tabbar", watching);
     return () => document.body.classList.remove("no-tabbar");
   }, [watching]);
-
-  function openSearch() {
-    router.push("/?search=open");
-  }
 
   // ⌘K / Ctrl+K or "/" opens search from anywhere.
   useEffect(() => {
@@ -84,50 +80,44 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-[100] px-3 pt-3 sm:px-5">
-        <nav
-          aria-label="Main"
-          className={`mx-auto flex max-w-[1280px] items-center gap-2 rounded-2xl border px-2.5 py-2 backdrop-blur-2xl transition-all duration-300 ${
-            scrolled
-              ? "border-gold-400/20 bg-ink/85 shadow-[0_18px_50px_-20px_rgba(0,0,0,0.9)]"
-              : "border-white/[0.07] bg-ink/45"
-          }`}
-        >
-          <Link href="/" aria-label="Oryz home" className="flex shrink-0 items-center rounded-xl px-1.5 py-1 transition hover:opacity-90">
-            <Logo size={34} />
+      <header
+        className={`sticky top-0 z-[100] transition-colors duration-300 ${
+          scrolled ? "border-b border-white/10 bg-ink/95 backdrop-blur-sm" : "border-b border-transparent bg-gradient-to-b from-ink/80 to-transparent"
+        }`}
+      >
+        <nav aria-label="Main" className="mx-auto flex h-16 max-w-[1280px] items-center gap-6 px-4 sm:px-5">
+          <Link href="/" aria-label="Oryz home" className="flex shrink-0 items-center">
+            <Logo size={32} />
           </Link>
 
-          <div className="mx-1 hidden h-7 w-px bg-white/10 sm:block" />
-
-          <div className="scrollbar-none hidden min-w-0 flex-1 items-center gap-0.5 overflow-x-auto sm:flex">
-            {links.map(({ href, label, icon: Icon }) => {
+          <div className="scrollbar-none hidden min-w-0 flex-1 items-center gap-1 overflow-x-auto sm:flex">
+            {links.map(({ href, label }) => {
               const active = isActive(pathname, href);
               return (
                 <Link
                   key={href}
                   href={href}
                   aria-current={active ? "page" : undefined}
-                  className={`relative flex shrink-0 items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
-                    active ? "text-gold-200" : "text-white/60 hover:bg-white/[0.06] hover:text-white"
+                  className={`relative shrink-0 px-3 py-5 text-sm font-semibold transition-colors ${
+                    active ? "text-white" : "text-white/55 hover:text-white"
                   }`}
                 >
-                  <Icon size={15} strokeWidth={1.8} />
-                  <span>{label}</span>
-                  {active ? <span className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-gold-400" /> : null}
+                  {label}
+                  <span className={`absolute inset-x-3 bottom-0 h-[3px] bg-gold-500 transition-transform duration-200 ${active ? "scale-x-100" : "scale-x-0"}`} />
                 </Link>
               );
             })}
           </div>
 
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex items-center gap-3">
             <button
-              onClick={openSearch}
-              className="flex h-10 items-center gap-2.5 rounded-xl border border-white/10 bg-white/[0.04] px-3 text-sm text-white/55 transition hover:border-gold-400/40 hover:text-white md:min-w-[200px]"
+              onClick={() => router.push("/?search=open")}
+              className="flex h-10 items-center gap-2.5 rounded-md border border-white/15 px-3 text-sm text-white/60 transition hover:border-white/40 hover:text-white md:min-w-[210px]"
               aria-label="Search (press slash or Command K)"
             >
-              <Search size={16} />
+              <Search size={18} />
               <span className="hidden flex-1 text-left md:inline">Search titles</span>
-              <span className="kbd hidden lg:inline-grid">⌘K</span>
+              <span className="kbd hidden lg:inline-grid">/</span>
             </button>
 
             <div className="hidden sm:block"><AuthStatus /></div>
@@ -138,10 +128,7 @@ export default function Navbar() {
 
       {/* Mobile bottom tab bar */}
       {!watching ? (
-        <nav
-          aria-label="Primary"
-          className="glass fixed inset-x-0 bottom-0 z-[100] border-x-0 border-b-0 pb-[env(safe-area-inset-bottom)] sm:hidden"
-        >
+        <nav aria-label="Primary" className="glass fixed inset-x-0 bottom-0 z-[100] border-x-0 border-b-0 pb-[env(safe-area-inset-bottom)] sm:hidden">
           <div className="mx-auto grid max-w-md grid-cols-5">
             {tabs.map(({ href, label, icon: Icon }) => {
               const active = isActive(pathname, href);
@@ -150,11 +137,11 @@ export default function Navbar() {
                   key={href}
                   href={href}
                   aria-current={active ? "page" : undefined}
-                  className={`flex h-16 flex-col items-center justify-center gap-1 text-[11px] font-medium transition ${
-                    active ? "text-gold-300" : "text-white/45"
+                  className={`flex h-[60px] flex-col items-center justify-center gap-1 text-[11px] font-semibold transition-colors ${
+                    active ? "text-gold-400" : "text-white/45"
                   }`}
                 >
-                  <Icon size={20} strokeWidth={active ? 2.2 : 1.7} />
+                  <Icon size={22} weight={active ? "duotone" : "regular"} />
                   {label}
                 </Link>
               );
@@ -162,7 +149,6 @@ export default function Navbar() {
           </div>
         </nav>
       ) : null}
-
     </>
   );
 }

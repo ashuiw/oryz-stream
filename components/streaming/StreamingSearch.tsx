@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Search, X, Film, Tv, Star } from "lucide-react";
+import { Search, X, Film, Tv, Star } from "@/components/ui/icons";
 import { useEffect, useRef, useState } from "react";
 import type { MediaItem } from "./types";
 import { posterUrl } from "./types";

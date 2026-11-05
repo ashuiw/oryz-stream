@@ -35,7 +35,7 @@ export default function Logo({ size = 34, withWordmark = true }: { size?: number
     <span className="inline-flex items-center gap-2.5">
       <LogoMark size={size} />
       {withWordmark ? (
-        <span className="font-display text-[1.35rem] font-semibold tracking-tight gold-text">Oryz</span>
+        <span className="font-display text-[1.7rem] font-extrabold leading-none text-white" style={{ fontStretch: "76%" }}>Oryz</span>
       ) : null}
     </span>
   );

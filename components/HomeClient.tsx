@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, ChevronLeft, ChevronRight, Info, Play, Star } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Dice, Info, Play, Star } from "@/components/ui/icons";
 import { useSearchParams } from "next/navigation";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
@@ -10,10 +10,13 @@ import OttSection from "./OttSection";
 import MediaGrid from "./MediaGrid";
 import MediaCard from "./MediaCard";
 import ScrollRow from "./ScrollRow";
+import ContinueWatching from "./ContinueWatching";
 import SearchOverlay from "./SearchOverlay";
 import MediaPreviewModal from "./MediaPreviewModal";
 import { useAuth } from "./auth/AuthProvider";
 import { Media, backdrop, mediaType, poster, titleOf, yearOf } from "@/lib/tmdb";
+
+const pad = (n: number) => String(n).padStart(2, "0");
 
 const moods = [
   { label: "Action", href: "/movies?genre=28" },
@@ -31,6 +34,7 @@ export default function HomeClient() {
   const { user } = useAuth();
   const [searchOpen, setSearchOpen] = useState(searchParams.get("search") === "open");
   const [trending, setTrending] = useState<Media[]>([]);
+  const [top10, setTop10] = useState<Media[]>([]);
   const [discover, setDiscover] = useState<Media[]>([]);
   const [shows, setShows] = useState<Media[]>([]);
   const [heroIndex, setHeroIndex] = useState(0);
@@ -62,6 +66,7 @@ export default function HomeClient() {
       ]);
 
       setTrending((heroData.results || []).filter((x: Media) => x.backdrop_path).slice(0, 8));
+      setTop10((heroData.results || []).filter((x: Media) => x.poster_path).slice(0, 10).map((x: Media) => ({ ...x, media_type: "movie" as const })));
       setDiscover((discoverData.results || []).slice(0, 50));
       setShows((showsData.results || []).slice(0, 16));
     }
@@ -73,6 +78,12 @@ export default function HomeClient() {
   const next = () => setHeroIndex((i) => (i + 1) % Math.max(trending.length, 1));
   const prev = () => setHeroIndex((i) => (i - 1 + trending.length) % Math.max(trending.length, 1));
   const upNext = trending.length > 1 ? [1, 2, 3].map((n) => trending[(heroIndex + n) % trending.length]) : [];
+
+  // Pick something at random from everything already loaded on the page.
+  function surprise() {
+    const pool = [...top10, ...discover, ...shows.map((x) => ({ ...x, media_type: "tv" as const }))];
+    if (pool.length) setPreview(pool[Math.floor(Math.random() * pool.length)]);
+  }
 
   const closeSearch = () => {
     setSearchOpen(false);
@@ -87,13 +98,13 @@ export default function HomeClient() {
       <main>
         {/* Hero */}
         <section
-          className={`relative -mt-[76px] overflow-hidden ${paused ? "hero-paused" : ""}`}
+          className={`relative -mt-16 overflow-hidden ${paused ? "hero-paused" : ""}`}
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
           aria-roledescription="carousel"
           aria-label="Trending movies"
         >
-          <div className="relative min-h-[620px] pt-[76px] sm:min-h-[700px]">
+          <div className="relative min-h-[600px] pt-16 sm:min-h-[680px]">
             {trending.map((m, i) => (
               <img
                 key={m.id}
@@ -104,61 +115,46 @@ export default function HomeClient() {
               />
             ))}
 
-            <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/70 to-ink/10" />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/10 to-ink/50" />
-            {!reduceMotion ? (
-              <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-                {[
-                  ["72%", "8%", "0s"],
-                  ["84%", "22%", "3.5s"],
-                  ["60%", "4%", "6s"],
-                  ["92%", "10%", "8.5s"],
-                ].map(([l, t, d], i) => (
-                  <span key={i} className="leaf" style={{ left: l, top: t, animationDelay: d }} />
-                ))}
-              </div>
-            ) : null}
+            <div className="absolute inset-0 bg-gradient-to-r from-ink/95 via-ink/55 to-ink/0" />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/0 to-ink/0" />
 
-            <div className="relative mx-auto flex min-h-[620px] max-w-[1280px] items-end px-4 pb-28 sm:min-h-[700px] sm:px-5 sm:pb-24">
-              <div className="grid w-full items-end gap-10 lg:grid-cols-[minmax(0,1fr)_340px]">
-                <div key={hero?.id ?? "empty"} className={`max-w-2xl ${hero ? "fade-in" : ""}`}>
+            <div className="relative mx-auto flex min-h-[600px] max-w-[1280px] items-end px-4 pb-24 sm:min-h-[680px] sm:px-5 sm:pb-20">
+              <div className="grid w-full items-end gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
+                <div key={hero?.id ?? "empty"} className={`max-w-3xl ${hero ? "fade-in" : ""}`}>
                   {hero ? (
-                    <div className="mb-4 flex flex-wrap items-center gap-2 text-xs font-medium text-white/80">
-                      <span className="rounded-full border border-gold-400/40 bg-gold-400/10 px-3 py-1 text-gold-200">Trending this week</span>
+                    <p className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-semibold text-white/80">
+                      <span className="text-gold-400">#{heroIndex + 1} trending</span>
+                      <span className="text-white/30">|</span>
+                      <span>Movie</span>
+                      {yearOf(hero) ? <><span className="text-white/30">|</span><span>{yearOf(hero)}</span></> : null}
                       {hero.vote_average ? (
-                        <span className="inline-flex items-center gap-1 text-gold-200">
-                          <Star size={12} fill="currentColor" /> {hero.vote_average.toFixed(1)}
-                        </span>
+                        <>
+                          <span className="text-white/30">|</span>
+                          <span className="inline-flex items-center gap-1"><Star size={13} weight="fill" className="text-gold-400" />{hero.vote_average.toFixed(1)}</span>
+                        </>
                       ) : null}
-                      {yearOf(hero) ? <span className="text-white/60">{yearOf(hero)}</span> : null}
-                    </div>
+                    </p>
                   ) : null}
 
                   {hero ? (
-                    <h1 className="text-balance text-4xl font-semibold leading-[1.02] sm:text-6xl lg:text-7xl">{titleOf(hero)}</h1>
+                    <h1 className="text-balance text-[clamp(3.2rem,11vw,8.5rem)]">{titleOf(hero)}</h1>
                   ) : (
-                    <div className="skeleton h-16 w-3/4 rounded-2xl" />
+                    <div className="skeleton h-24 w-3/4 rounded-md" />
                   )}
 
-                  <p className="mt-5 line-clamp-3 max-w-xl text-sm leading-6 text-white/70 sm:text-base sm:leading-7">
+                  <p className="mt-5 line-clamp-3 max-w-xl text-[15px] leading-7 text-white/75">
                     {hero?.overview || (loaded ? "Browse popular movies, shows and anime in one place." : "")}
                   </p>
 
                   <div className="mt-7 flex flex-wrap items-center gap-3">
-                    <Link
-                      href={hero ? `/watch/movie/${hero.id}` : "/movies"}
-                      className="gold-btn inline-flex h-12 items-center gap-2 rounded-xl px-6 text-sm"
-                    >
-                      <Play size={16} fill="currentColor" />
+                    <Link href={hero ? `/watch/movie/${hero.id}` : "/movies"} className="gold-btn inline-flex h-12 items-center gap-2.5 px-6 text-[15px]">
+                      <Play size={18} />
                       Watch now
                     </Link>
                     {hero ? (
-                      <button
-                        onClick={() => setPreview(hero)}
-                        className="inline-flex h-12 items-center gap-2 rounded-xl border border-white/20 bg-ink/40 px-5 text-sm font-medium text-white backdrop-blur-md transition hover:border-gold-400/60 hover:bg-ink/60"
-                      >
-                        <Info size={16} />
-                        More info
+                      <button onClick={() => setPreview(hero)} className="ghost-btn inline-flex h-12 items-center gap-2.5 px-5 text-[15px]">
+                        <Info size={19} weight="duotone" />
+                        Details
                       </button>
                     ) : null}
                   </div>
@@ -167,31 +163,35 @@ export default function HomeClient() {
                 {/* Up next */}
                 {upNext.length ? (
                   <div className="hidden lg:block">
-                    <p className="mb-3 text-sm font-medium text-white/60">Up next</p>
-                    <div className="space-y-2.5">
+                    <p className="mb-2 text-sm font-semibold text-white/60">Up next</p>
+                    <ul className="border-t border-white/15">
                       {upNext.map((m) => (
-                        <button
-                          key={m.id}
-                          onClick={() => setHeroIndex(trending.findIndex((t) => t.id === m.id))}
-                          className="glass group flex w-full items-center gap-3 rounded-2xl p-2 text-left transition hover:border-gold-400/50"
-                        >
-                          <img src={poster(m.poster_path, "w185")} alt="" className="h-[72px] w-12 shrink-0 rounded-lg object-cover" />
-                          <span className="min-w-0">
-                            <span className="line-clamp-1 text-sm font-semibold text-white/90">{titleOf(m)}</span>
-                            <span className="mt-0.5 block text-xs text-white/45">{yearOf(m)}</span>
-                          </span>
-                        </button>
+                        <li key={m.id} className="border-b border-white/15">
+                          <button
+                            onClick={() => setHeroIndex(trending.findIndex((t) => t.id === m.id))}
+                            className="group flex w-full items-center gap-3 py-3 text-left"
+                          >
+                            <img src={poster(m.poster_path, "w185")} alt="" className="h-[66px] w-11 shrink-0 rounded-[3px] object-cover" />
+                            <span className="min-w-0 flex-1">
+                              <span className="line-clamp-1 text-sm font-semibold text-white transition-colors group-hover:text-gold-400">{titleOf(m)}</span>
+                              <span className="mt-0.5 block text-xs text-white/50">{yearOf(m)}</span>
+                            </span>
+                          </button>
+                        </li>
                       ))}
-                    </div>
+                    </ul>
                   </div>
                 ) : null}
               </div>
             </div>
 
-            {/* Slide markers with progress — each fills, then advances */}
+            {/* Slide markers: numbered because the slides are a sequence */}
             {trending.length > 1 ? (
-              <div className="absolute inset-x-0 bottom-6 sm:bottom-8">
-                <div className="mx-auto flex max-w-[1280px] items-center gap-3 px-4 sm:px-5">
+              <div className="absolute inset-x-0 bottom-5 sm:bottom-7">
+                <div className="mx-auto flex max-w-[1280px] items-center gap-4 px-4 sm:px-5">
+                  <span className="w-14 shrink-0 text-sm font-bold tabular-nums text-white">
+                    {pad(heroIndex + 1)}<span className="text-white/40"> / {pad(trending.length)}</span>
+                  </span>
                   <div className="flex flex-1 items-center gap-1.5">
                     {trending.map((m, i) => (
                       <button
@@ -199,9 +199,9 @@ export default function HomeClient() {
                         onClick={() => setHeroIndex(i)}
                         aria-label={`Show ${titleOf(m)}`}
                         aria-current={i === heroIndex}
-                        className="group h-6 flex-1 max-w-16 py-2.5"
+                        className="group h-6 max-w-20 flex-1 py-2.5"
                       >
-                        <span className="hero-progress block h-[3px] overflow-hidden rounded-full bg-white/20 transition group-hover:bg-white/35">
+                        <span className="hero-progress block h-[3px] overflow-hidden bg-white/25 transition group-hover:bg-white/45">
                           {i === heroIndex ? (
                             <span key={`${heroIndex}-p`} onAnimationEnd={reduceMotion ? undefined : next} />
                           ) : i < heroIndex ? (
@@ -212,11 +212,11 @@ export default function HomeClient() {
                     ))}
                   </div>
                   <div className="flex gap-2">
-                    <button onClick={prev} aria-label="Previous" className="glass grid h-9 w-9 place-items-center rounded-full text-white/75 transition hover:text-gold-200">
-                      <ChevronLeft size={17} />
+                    <button onClick={prev} aria-label="Previous" className="grid h-9 w-9 place-items-center rounded-md border border-white/25 text-white/80 transition hover:border-gold-500 hover:text-gold-300">
+                      <ChevronLeft size={16} />
                     </button>
-                    <button onClick={next} aria-label="Next" className="glass grid h-9 w-9 place-items-center rounded-full text-white/75 transition hover:text-gold-200">
-                      <ChevronRight size={17} />
+                    <button onClick={next} aria-label="Next" className="grid h-9 w-9 place-items-center rounded-md border border-white/25 text-white/80 transition hover:border-gold-500 hover:text-gold-300">
+                      <ChevronRight size={16} />
                     </button>
                   </div>
                 </div>
@@ -225,20 +225,42 @@ export default function HomeClient() {
           </div>
         </section>
 
-        {/* Quick genres */}
-        <section className="mx-auto max-w-[1280px] px-4 pt-6 sm:px-5">
-          <div className="scrollbar-none -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
-            {moods.map((m) => (
-              <Link
-                key={m.label}
-                href={m.href}
-                className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-white/75 transition hover:border-gold-400/60 hover:bg-gold-400/10 hover:text-gold-100"
-              >
-                {m.label}
-              </Link>
-            ))}
+        {/* Genre strip + Surprise me */}
+        <section className="mx-auto max-w-[1280px] px-4 pt-5 sm:px-5">
+          <div className="flex items-center gap-4 border-b border-white/10 pb-3">
+            <div className="scrollbar-none -mx-4 flex flex-1 gap-5 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+              {moods.map((m) => (
+                <Link key={m.label} href={m.href} className="shrink-0 py-1 text-sm font-semibold text-white/60 transition hover:text-gold-400">
+                  {m.label}
+                </Link>
+              ))}
+            </div>
+            <button onClick={surprise} className="ghost-btn hidden h-10 shrink-0 items-center gap-2 px-4 text-sm sm:inline-flex">
+              <Dice size={19} weight="duotone" />
+              Surprise me
+            </button>
           </div>
+          <button onClick={surprise} className="ghost-btn mt-3 inline-flex h-10 items-center gap-2 px-4 text-sm sm:hidden">
+            <Dice size={19} weight="duotone" />
+            Surprise me
+          </button>
         </section>
+
+        <ContinueWatching />
+
+        {/* Top 10 */}
+        {top10.length ? (
+          <ScrollRow title="Top 10 movies this week" subtitle="Ranked by what people are watching" href="/movies">
+            {top10.map((item, i) => (
+              <div key={item.id} className="flex shrink-0 snap-start items-end">
+                <span className="rank-num -mr-3 text-[7.5rem] sm:text-[9rem]">{i + 1}</span>
+                <div className="w-[130px] sm:w-[160px]">
+                  <MediaCard item={item} />
+                </div>
+              </div>
+            ))}
+          </ScrollRow>
+        ) : null}
 
         {/* Trending shows shelf */}
         {shows.length ? (
@@ -252,30 +274,30 @@ export default function HomeClient() {
         ) : !loaded ? (
           <div className="mx-auto flex max-w-[1280px] gap-3 overflow-hidden px-4 py-7 sm:px-5">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="skeleton aspect-[2/3] w-[132px] shrink-0 rounded-2xl sm:w-[168px]" />
+              <div key={i} className="skeleton aspect-[2/3] w-[132px] shrink-0 rounded-[4px] sm:w-[168px]" />
             ))}
           </div>
         ) : null}
 
         <OttSection />
 
-        {/* Banner band — brand moment + account prompt */}
+        {/* Banner band */}
         <section className="mx-auto max-w-[1280px] px-4 py-6 sm:px-5">
           <div
-            className="relative overflow-hidden rounded-3xl border border-gold-400/20"
+            className="relative overflow-hidden rounded-md border border-white/10"
             style={{ backgroundImage: "url(/brand/banner.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/55 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-ink/95 via-ink/60 to-transparent" />
             <div className="relative flex flex-col items-start gap-5 p-7 sm:flex-row sm:items-center sm:justify-between sm:p-10">
               <div className="max-w-lg">
-                <h2 className="text-2xl font-semibold sm:text-3xl">Pick up where you left off</h2>
-                <p className="mt-2 text-sm leading-6 text-white/65">
+                <h2 className="text-4xl sm:text-5xl">Pick up where you left off</h2>
+                <p className="mt-3 text-sm leading-6 text-white/70">
                   Save favorites, build a watch-later list and resume any movie or episode on any device.
                 </p>
               </div>
-              <Link href={user ? "/library" : "/login"} className="gold-btn inline-flex h-12 shrink-0 items-center gap-2 rounded-xl px-6 text-sm">
+              <Link href={user ? "/library" : "/login"} className="gold-btn inline-flex h-12 shrink-0 items-center gap-2.5 px-6 text-[15px]">
                 {user ? "Open your library" : "Sign in to start"}
-                <ArrowRight size={16} />
+                <ArrowRight size={17} weight="bold" />
               </Link>
             </div>
           </div>
@@ -283,14 +305,14 @@ export default function HomeClient() {
 
         {/* Discover grid */}
         <section className="mx-auto max-w-[1280px] px-4 py-8 sm:px-5">
-          <div className="mb-5 flex items-end justify-between gap-4">
+          <div className="section-head mb-6 flex items-end justify-between gap-4">
             <div>
               <h2 className="section-title">Find your next watch</h2>
-              <p className="mt-1 text-sm text-white/45">Popular movies picked from across genres</p>
+              <p className="mt-1.5 text-sm text-white/50">Popular movies picked from across genres</p>
             </div>
-            <Link href="/movies" className="flex shrink-0 items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white/75 transition hover:border-gold-400/50 hover:text-gold-100">
-              Browse all movies
-              <ArrowRight size={15} />
+            <Link href="/movies" className="inline-flex shrink-0 items-center gap-1.5 py-1.5 text-sm font-semibold text-gold-400 transition hover:text-gold-200">
+              Browse all
+              <ArrowRight size={15} weight="bold" />
             </Link>
           </div>
 
@@ -299,7 +321,7 @@ export default function HomeClient() {
           ) : (
             <div className="grid grid-cols-2 gap-x-3 gap-y-7 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
               {Array.from({ length: 12 }).map((_, i) => (
-                <div key={i} className="skeleton aspect-[2/3] rounded-2xl" />
+                <div key={i} className="skeleton aspect-[2/3] rounded-[4px]" />
               ))}
             </div>
           )}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { CalendarDays, Clock3, Play, Star, Tv, Film, X, Users } from "lucide-react";
+import { CalendarDays, Clock3, Play, Share, Star, Tv, Film, X, Users } from "@/components/ui/icons";
 import { Media, backdrop, mediaType, poster, titleOf, yearOf } from "@/lib/tmdb";
 import Link from "next/link";
 import LibraryActions from "@/components/library/LibraryActions";
@@ -102,12 +102,27 @@ export default function MediaPreviewModal({
   const firstEpisode = episodes[0];
   const heroImage = detail?.backdrop_path || item?.backdrop_path;
   const cast = useMemo(() => detail?.credits?.cast?.slice(0, 8) || [], [detail]);
+  const [copied, setCopied] = useState(false);
+
+  async function share() {
+    if (!item) return;
+    const url = `${window.location.origin}${watchHref(type, item.id, season, 1)}`;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: titleOf(detail || item), url });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {}
+  }
 
   if (!item) return null;
 
   return (
     <div className="fixed inset-0 z-[160] flex items-center justify-center bg-ink/85 p-3 backdrop-blur-md sm:p-6" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="relative max-h-[94vh] w-full max-w-5xl overflow-hidden rounded-[28px] border border-gold-400/20 bg-ink-2 shadow-2xl">
+      <div className="relative max-h-[94vh] w-full max-w-5xl overflow-hidden rounded-lg border border-gold-400/20 bg-ink-2 shadow-2xl">
         <button onClick={onClose} aria-label="Close" className="absolute right-4 top-4 z-30 grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-black/55 text-white/70 backdrop-blur-md hover:bg-white/10 hover:text-white">
           <X size={19} />
         </button>
@@ -129,10 +144,14 @@ export default function MediaPreviewModal({
                 <h2 className="text-3xl font-bold tracking-tight text-white sm:text-5xl">{titleOf(detail || item)}</h2>
                 {detail?.tagline ? <p className="mt-2 text-sm italic text-white/45">{detail.tagline}</p> : null}
                 <div className="mt-5 flex flex-wrap gap-2">
-                  <Link href={watchHref(type, item.id, season, firstEpisode?.episode_number || 1)} className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-white/85">
+                  <Link href={watchHref(type, item.id, season, firstEpisode?.episode_number || 1)} className="gold-btn inline-flex items-center gap-2 px-5 py-3 text-sm">
                     <Play size={15} fill="currentColor" />
                     {type === "tv" ? `Watch S${season} · E${firstEpisode?.episode_number || 1}` : "Watch now"}
                   </Link>
+                  <button onClick={share} className="ghost-btn inline-flex items-center gap-2 px-4 py-3 text-sm">
+                    <Share size={17} weight="duotone" />
+                    {copied ? "Link copied" : "Share"}
+                  </button>
                 </div>
                 <div className="mt-4"><LibraryActions item={item} type={type} /></div>
               </div>
@@ -140,7 +159,7 @@ export default function MediaPreviewModal({
           </section>
 
           <div className="space-y-7 p-6 sm:p-9">
-            {loading ? <div className="h-24 animate-pulse rounded-2xl bg-white/[0.05]" /> : (
+            {loading ? <div className="h-24 animate-pulse rounded-lg bg-white/[0.05]" /> : (
               <>
                 <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_260px]">
                   <div>
@@ -163,16 +182,16 @@ export default function MediaPreviewModal({
                         <h3 className="text-lg font-semibold text-white">Episodes</h3>
                         <p className="mt-1 text-xs text-white/35">{selectedSeason?.name || `Season ${season}`} · {episodes.length || selectedSeason?.episode_count || 0} episodes</p>
                       </div>
-                      <select value={season} onChange={(e) => setSeason(Number(e.target.value))} className="rounded-xl border border-white/10 bg-[#1c1913] px-3 py-2 text-sm text-white outline-none">
+                      <select value={season} onChange={(e) => setSeason(Number(e.target.value))} className="rounded-md border border-white/10 bg-[#1c1913] px-3 py-2 text-sm text-white outline-none">
                         {detail.seasons.filter((s) => s.season_number >= 0).map((s) => <option key={s.id} value={s.season_number}>{s.name}</option>)}
                       </select>
                     </div>
 
-                    {episodeLoading ? <div className="space-y-3">{[1,2,3].map((n) => <div key={n} className="h-24 animate-pulse rounded-2xl bg-white/[0.04]" />)}</div> : (
+                    {episodeLoading ? <div className="space-y-3">{[1,2,3].map((n) => <div key={n} className="h-24 animate-pulse rounded-lg bg-white/[0.04]" />)}</div> : (
                       <div className="space-y-3">
                         {episodes.map((ep) => (
-                          <Link key={ep.id} href={watchHref("tv", item.id, season, ep.episode_number)} className="group grid gap-4 rounded-2xl border border-white/[0.07] bg-white/[0.025] p-2.5 transition hover:border-white/15 hover:bg-white/[0.05] sm:grid-cols-[190px_minmax(0,1fr)_auto]">
-                            <div className="relative aspect-video overflow-hidden rounded-xl bg-black/30">
+                          <Link key={ep.id} href={watchHref("tv", item.id, season, ep.episode_number)} className="group grid gap-4 rounded-lg border border-white/[0.07] bg-white/[0.025] p-2.5 transition hover:border-white/15 hover:bg-white/[0.05] sm:grid-cols-[190px_minmax(0,1fr)_auto]">
+                            <div className="relative aspect-video overflow-hidden rounded-md bg-black/30">
                               {ep.still_path ? <img src={backdrop(ep.still_path, "w500")} alt={ep.name} className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]" /> : <div className="grid h-full place-items-center text-xs text-white/25">No thumbnail</div>}
                               <span className="absolute left-2 top-2 rounded-md bg-black/70 px-2 py-1 text-[11px] font-semibold text-white">E{ep.episode_number}</span>
                             </div>
@@ -193,7 +212,7 @@ export default function MediaPreviewModal({
                   <section>
                     <div className="mb-4 flex items-center gap-2"><Users size={16} className="text-white/45" /><h3 className="text-lg font-semibold">Cast</h3></div>
                     <div className="grid grid-cols-4 gap-3 sm:grid-cols-6 lg:grid-cols-8">
-                      {cast.map((person) => <div key={person.id} className="min-w-0"><div className="aspect-[2/3] overflow-hidden rounded-xl bg-white/[0.05]">{person.profile_path ? <img src={poster(person.profile_path, "w185")} alt={person.name} className="h-full w-full object-cover" /> : null}</div><p className="mt-2 line-clamp-1 text-xs font-medium text-white/75">{person.name}</p><p className="line-clamp-1 text-[10px] text-white/30">{person.character || ""}</p></div>)}
+                      {cast.map((person) => <div key={person.id} className="min-w-0"><div className="aspect-[2/3] overflow-hidden rounded-md bg-white/[0.05]">{person.profile_path ? <img src={poster(person.profile_path, "w185")} alt={person.name} className="h-full w-full object-cover" /> : null}</div><p className="mt-2 line-clamp-1 text-xs font-medium text-white/75">{person.name}</p><p className="line-clamp-1 text-[10px] text-white/30">{person.character || ""}</p></div>)}
                     </div>
                   </section>
                 ) : null}
@@ -207,5 +226,5 @@ export default function MediaPreviewModal({
 }
 
 function Info({ icon, label, value }: { icon: ReactNode; label: string; value: string }) {
-  return <div className="rounded-xl border border-white/[0.06] bg-white/[0.025] p-3"><div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-white/25">{icon}{label}</div><p className="mt-1 text-sm font-medium text-white/75">{value}</p></div>;
+  return <div className="rounded-md border border-white/[0.06] bg-white/[0.025] p-3"><div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-white/25">{icon}{label}</div><p className="mt-1 text-sm font-medium text-white/75">{value}</p></div>;
 }

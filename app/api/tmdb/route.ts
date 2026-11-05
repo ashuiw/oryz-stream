@@ -159,6 +159,19 @@ export async function GET(request: NextRequest) {
 
     if (genre) params.with_genres = genre;
 
+    // Optional sort for the browse pages: "rating" or "newest" (default is popularity).
+    const sort = searchParams.get("sort");
+    const today = new Date().toISOString().slice(0, 10);
+    if (sort === "rating") {
+      params.sort_by = "vote_average.desc";
+      params["vote_count.gte"] = 500;
+    } else if (sort === "newest") {
+      const dateKey = mediaType === "movie" ? "primary_release_date" : "first_air_date";
+      params.sort_by = `${dateKey}.desc`;
+      params[`${dateKey}.lte`] = today;
+      params["vote_count.gte"] = 20;
+    }
+
     switch (mode) {
       case "trending":
         endpoint = `/trending/${mediaType}/week`;

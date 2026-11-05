@@ -2,15 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Search, Smartphone, Sparkles, X } from "lucide-react";
+import { Dice, Search, Smartphone, X } from "@/components/ui/icons";
 import { LogoMark } from "@/components/Logo";
 
 // Bump this key to show a new announcement to everyone again in a future update.
 const STORAGE_KEY = "oryz:whats-new:ui-2026-11";
 
 const highlights = [
-  { icon: Sparkles, title: "A fresh new look", text: "A new gold-and-black design with a livelier home page." },
-  { icon: Search, title: "Faster search", text: "Press ⌘K or / anywhere. Recent searches are remembered." },
+  { icon: Dice, title: "Top 10, Continue watching and Surprise me", text: "Find something to watch faster, and resume where you stopped." },
+  { icon: Search, title: "Faster search", text: "Press / or ⌘K anywhere. Recent searches are remembered." },
   { icon: Smartphone, title: "Better on phones", text: "A bottom tab bar and layouts built for small screens." },
 ];
 
@@ -58,7 +58,7 @@ export default function WhatsNewModal() {
         role="dialog"
         aria-modal="true"
         aria-labelledby="whats-new-title"
-        className="pop-in relative w-full max-w-md overflow-hidden rounded-3xl border border-gold-400/25 bg-ink-2 shadow-glow"
+        className="pop-in relative w-full max-w-md overflow-hidden rounded-lg border border-gold-400/25 bg-ink-2 shadow-2xl"
       >
         <div
           aria-hidden
@@ -88,8 +88,8 @@ export default function WhatsNewModal() {
 
           <ul className="mt-5 space-y-3 text-left">
             {highlights.map(({ icon: Icon, title, text }) => (
-              <li key={title} className="flex items-start gap-3 rounded-2xl border border-white/[0.07] bg-white/[0.03] p-3.5">
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gold-400/15 text-gold-300">
+              <li key={title} className="flex items-start gap-3 rounded-lg border border-white/[0.07] bg-white/[0.03] p-3.5">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-gold-400/15 text-gold-400">
                   <Icon size={17} />
                 </span>
                 <span className="min-w-0">
@@ -100,7 +100,7 @@ export default function WhatsNewModal() {
             ))}
           </ul>
 
-          <button ref={buttonRef} onClick={close} className="gold-btn mt-6 h-12 w-full rounded-xl text-sm">
+          <button ref={buttonRef} onClick={close} className="gold-btn mt-6 h-12 w-full rounded-md text-sm">
             Explore Oryz
           </button>
         </div>

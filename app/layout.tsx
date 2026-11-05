@@ -1,21 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Figtree } from "next/font/google";
+import { Archivo, Hanken_Grotesk } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import BackToTop from "@/components/BackToTop";
 import WhatsNewModal from "@/components/WhatsNewModal";
 
-const fraunces = Fraunces({
+const archivo = Archivo({
   subsets: ["latin"],
-  variable: "--font-fraunces",
+  variable: "--font-archivo",
   display: "swap",
-  axes: ["opsz"],
+  axes: ["wdth"],
 });
 
-const figtree = Figtree({
+const hanken = Hanken_Grotesk({
   subsets: ["latin"],
-  variable: "--font-figtree",
+  variable: "--font-hanken",
   display: "swap",
 });
 
@@ -57,7 +57,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${figtree.variable}`}>
+    <html lang="en" className={`${archivo.variable} ${hanken.variable}`}>
       <body>
         <ServiceWorkerRegistration />
         <AuthProvider>{children}</AuthProvider>

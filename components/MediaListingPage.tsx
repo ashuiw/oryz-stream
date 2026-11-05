@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "@/components/ui/icons";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import MediaGrid from "./MediaGrid";
@@ -45,6 +45,7 @@ export default function MediaListingPage({
   const genres = isAnime ? animeGenres : isMovie ? movieGenres : tvGenres;
 
   const [genre, setGenre] = useState("");
+  const [sort, setSort] = useState<"popular" | "rating" | "newest">("popular");
   const [items, setItems] = useState<Media[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -62,6 +63,7 @@ export default function MediaListingPage({
       });
 
       if (genre) params.set("genre", genre);
+      if (sort !== "popular" && !isAnime) params.set("sort", sort);
 
       try {
         const res = await fetch(`/api/tmdb?${params.toString()}`, {
@@ -80,7 +82,7 @@ export default function MediaListingPage({
 
     load();
     return () => controller.abort();
-  }, [kind, genre, page]);
+  }, [kind, genre, page, sort, isAnime]);
 
   const visibleGenres = useMemo(() => genres, [genres]);
 
@@ -110,7 +112,7 @@ export default function MediaListingPage({
 
         <div className="grid gap-8 lg:grid-cols-[210px_minmax(0,1fr)]">
           <aside className="lg:sticky lg:top-24 lg:h-fit">
-            <div className="rounded-2xl border border-gold-400/15 bg-white/[0.025] p-2">
+            <div className="rounded-lg border border-gold-400/15 bg-white/[0.025] p-2">
               <div className="mb-2 px-3 py-2 text-sm font-semibold text-gold-200">
                 Genres
               </div>
@@ -120,7 +122,7 @@ export default function MediaListingPage({
                   <button
                     key={`${label}-${value}`}
                     onClick={() => selectGenre(value)}
-                    className={`rounded-xl px-3 py-2.5 text-left text-sm transition ${
+                    className={`rounded-md px-3 py-2.5 text-left text-sm transition ${
                       genre === value
                         ? "bg-gold-400/15 font-medium text-gold-100"
                         : "text-white/50 hover:bg-white/[0.05] hover:text-white"
@@ -134,16 +136,32 @@ export default function MediaListingPage({
           </aside>
 
           <section>
-            <div className="mb-5 flex items-center justify-between gap-3">
-              <p className="text-sm text-white/35">
-                {loading ? "Loading..." : `${items.length} titles`}
-              </p>
+            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+              {!isAnime ? (
+                <div role="tablist" aria-label="Sort titles" className="flex gap-5 border-b border-white/10">
+                  {([["popular", "Popular"], ["rating", "Top rated"], ["newest", "Newest"]] as const).map(([value, label]) => (
+                    <button
+                      key={value}
+                      role="tab"
+                      aria-selected={sort === value}
+                      onClick={() => { setSort(value); setPage(1); }}
+                      className={`relative -mb-px border-b-[3px] py-2.5 text-sm font-semibold transition-colors ${
+                        sort === value ? "border-gold-500 text-white" : "border-transparent text-white/50 hover:text-white"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-white/45">{loading ? "Loading…" : `${items.length} titles`}</p>
+              )}
 
               <div className="flex items-center gap-2">
                 <button
                   disabled={page <= 1 || loading}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-white/[0.03] text-white/60 disabled:cursor-not-allowed disabled:opacity-30"
+                  className="grid h-9 w-9 place-items-center rounded-md border border-white/10 bg-white/[0.03] text-white/60 disabled:cursor-not-allowed disabled:opacity-30"
                 >
                   <ChevronLeft size={17} />
                 </button>
@@ -153,7 +171,7 @@ export default function MediaListingPage({
                 <button
                   disabled={page >= totalPages || loading}
                   onClick={() => setPage((p) => p + 1)}
-                  className="grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-white/[0.03] text-white/60 disabled:cursor-not-allowed disabled:opacity-30"
+                  className="grid h-9 w-9 place-items-center rounded-md border border-white/10 bg-white/[0.03] text-white/60 disabled:cursor-not-allowed disabled:opacity-30"
                 >
                   <ChevronRight size={17} />
                 </button>
@@ -165,14 +183,14 @@ export default function MediaListingPage({
                 {Array.from({ length: 18 }).map((_, i) => (
                   <div
                     key={i}
-                    className="aspect-[2/3] skeleton rounded-2xl"
+                    className="aspect-[2/3] skeleton rounded-lg"
                   />
                 ))}
               </div>
             ) : items.length ? (
               <MediaGrid items={items} />
             ) : (
-              <div className="rounded-2xl border border-white/[0.06] bg-white/[0.025] p-12 text-center text-sm text-white/40">
+              <div className="rounded-lg border border-white/[0.06] bg-white/[0.025] p-12 text-center text-sm text-white/40">
                 Nothing found for this filter.
               </div>
             )}

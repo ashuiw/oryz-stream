@@ -3,7 +3,7 @@
 import {
   ChevronDown,
   Server,
-} from "lucide-react";
+} from "@/components/ui/icons";
 
 import type {
   ServerOption,
@@ -30,7 +30,7 @@ export default function ServerSelector({
           min-w-0
           items-center
           gap-2
-          rounded-xl
+          rounded-md
           border
           border-white/10
           bg-white/[0.04]

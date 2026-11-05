@@ -5,10 +5,7 @@ export default function StreamingStyles() {
       .oryz-section-page {
         min-height: 100vh;
         color: #fff;
-        background:
-          radial-gradient(circle at 82% 0%, rgba(217, 164, 65, .08), transparent 34rem),
-          radial-gradient(circle at 10% 24%, rgba(217, 164, 65, .04), transparent 30rem),
-          #110f0b;
+        background: #0e0d0a;
       }
 
       .streaming-shell,
@@ -33,7 +30,7 @@ export default function StreamingStyles() {
         height: 280px;
         left: -120px;
         top: -100px;
-        background: radial-gradient(circle, rgba(217,164,65,.12), transparent 68%);
+        background: none;
         pointer-events: none;
       }
 
@@ -74,14 +71,14 @@ export default function StreamingStyles() {
         display: grid;
         place-items: center;
         overflow: hidden;
-        border-radius: 18px;
+        border-radius: 8px;
         color: #fff;
         text-align: center;
       }
-      .provider-logo img { width: 100%; height: 100%; object-fit: contain; padding: 9px 16px; display: block; border-radius: 18px; }
+      .provider-logo img { width: 100%; height: 100%; object-fit: contain; padding: 9px 16px; display: block; border-radius: 8px; }
       .provider-logo span { font-weight: 900; letter-spacing: -.045em; line-height: .95; font-size: 19px; }
-      .provider-logo-large { width: 82px; height: 82px; flex: 0 0 82px; border: 1px solid rgba(255,255,255,.08); border-radius: 22px; background: rgba(255,255,255,.045); }
-      .provider-logo-large img { padding: 13px; border-radius: 18px; }
+      .provider-logo-large { width: 82px; height: 82px; flex: 0 0 82px; border: 1px solid rgba(255,255,255,.08); border-radius: 8px; background: rgba(255,255,255,.045); }
+      .provider-logo-large img { padding: 13px; border-radius: 8px; }
       .provider-logo-large span { font-size: 24px; }
 
       .streaming-section { margin-top: 48px; }
@@ -89,7 +86,7 @@ export default function StreamingStyles() {
       .streaming-brand { display: flex; align-items: center; gap: 13px; min-width: 0; }
       .streaming-brand h2 { margin: 0; font-size: 20px; letter-spacing: -.02em; }
       .streaming-brand p { margin: 4px 0 0; color: rgba(255,255,255,.35); font-size: 12px; }
-      .see-all, .stream-back-link { border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.045); color: rgba(255,255,255,.78); border-radius: 999px; padding: 9px 14px; text-decoration: none; font-size: 12px; transition: .2s; white-space: nowrap; }
+      .see-all, .stream-back-link { border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.045); color: rgba(255,255,255,.78); border-radius: 6px; padding: 9px 14px; text-decoration: none; font-size: 12px; transition: .2s; white-space: nowrap; }
       .see-all:hover, .stream-back-link:hover { background: rgba(217,164,65,.12); color: #f6e8b8; border-color: rgba(224,180,87,.5); }
       .content-heading { margin: 25px 0 12px; color: rgba(255,255,255,.52); font-size: 13px; font-weight: 700; }
 
@@ -102,7 +99,7 @@ export default function StreamingStyles() {
       .media-carousel-arrow-left { left: 3px; }
       .media-carousel-arrow-right { right: 3px; }
       .stream-card { min-width: 0; color: inherit; text-decoration: none; }
-      .stream-card-poster { position: relative; aspect-ratio: 2 / 3; overflow: hidden; border-radius: 17px; border: 1px solid rgba(255,255,255,.07); background: #111; transition: transform .22s ease, border-color .22s ease; }
+      .stream-card-poster { position: relative; aspect-ratio: 2 / 3; overflow: hidden; border-radius: 8px; border: 1px solid rgba(255,255,255,.07); background: #111; transition: transform .22s ease, border-color .22s ease; }
       .stream-card:hover .stream-card-poster { transform: translateY(-4px); border-color: rgba(224,180,87,.55); box-shadow: 0 22px 50px -18px rgba(217,164,65,.4); }
       .stream-card-poster > img { width: 100%; height: 100%; object-fit: cover; display: block; }
       .stream-card-gradient { position: absolute; inset: 45% 0 0; background: linear-gradient(transparent, rgba(0,0,0,.94)); }
@@ -114,19 +111,19 @@ export default function StreamingStyles() {
       .provider-detail-hero { display: flex; align-items: center; gap: 18px; padding: 46px 0 28px; }
       .provider-detail-title { margin: 6px 0 0; font-size: clamp(36px, 5vw, 58px); line-height: .98; letter-spacing: -.05em; }
       .provider-actions { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
-      .type-tabs { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid rgba(255,255,255,.08); border-radius: 13px; background: rgba(255,255,255,.035); }
+      .type-tabs { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid rgba(255,255,255,.08); border-radius: 8px; background: rgba(255,255,255,.035); }
       .type-tabs button { border: 0; color: rgba(255,255,255,.42); background: transparent; border-radius: 9px; padding: 10px 16px; cursor: pointer; font: 600 12px inherit; }
-      .type-tabs button.active { color: #110f0b; background: linear-gradient(135deg,#f1dd9f,#d9a441); }
+      .type-tabs button.active { color: #0e0d0a; background: linear-gradient(135deg,#f1dd9f,#d9a441); }
       .catalog-count { color: rgba(255,255,255,.3); font-size: 11px; }
       .detail-grid { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 20px 14px; }
       .load-more-wrap { display: flex; justify-content: center; padding: 34px 0; }
-      .load-more { border: 0; background: linear-gradient(135deg,#f1dd9f,#d9a441 55%,#a8832f); color: #110f0b; border-radius: 999px; padding: 12px 22px; font-weight: 700; cursor: pointer; }
+      .load-more { border: 0; background: linear-gradient(135deg,#f1dd9f,#d9a441 55%,#a8832f); color: #0e0d0a; border-radius: 6px; padding: 12px 22px; font-weight: 700; cursor: pointer; }
       .load-more:disabled { opacity: .5; cursor: wait; }
       .empty-catalog { padding: 70px 20px; text-align: center; color: rgba(255,255,255,.35); }
       .loading-line { height: 3px; width: 100%; overflow: hidden; background: rgba(255,255,255,.05); }
       .loading-line:after { content: ""; display: block; height: 100%; width: 35%; background: #d9a441; animation: streamLoad 1.1s infinite ease-in-out; }
       @keyframes streamLoad { from { transform: translateX(-120%); } to { transform: translateX(320%); } }
-      .stream-error { margin: 20px 0; padding: 15px 17px; border: 1px solid rgba(255,255,255,.08); border-radius: 14px; color: rgba(255,255,255,.55); background: rgba(255,255,255,.035); }
+      .stream-error { margin: 20px 0; padding: 15px 17px; border: 1px solid rgba(255,255,255,.08); border-radius: 8px; color: rgba(255,255,255,.55); background: rgba(255,255,255,.035); }
 
       @media (max-width: 1100px) {
         .detail-grid { grid-template-columns: repeat(5, minmax(0,1fr)); }

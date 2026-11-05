@@ -77,7 +77,7 @@ export default function GenreSidebar({
                   flex
                   items-center
                   gap-3
-                  rounded-xl
+                  rounded-md
                   px-3
                   py-2.5
                   text-xs
@@ -114,7 +114,7 @@ export default function GenreSidebar({
                 href={`${basePath}?genre=${genre.id}`}
                 className={`
                   block
-                  rounded-xl
+                  rounded-md
                   px-3
                   py-2.5
                   text-xs

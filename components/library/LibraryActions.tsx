@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bookmark, Heart, LogIn } from "lucide-react";
+import { Bookmark, Heart, LogIn } from "@/components/ui/icons";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/components/auth/AuthProvider";
 import type { Media } from "@/lib/tmdb";
@@ -55,14 +55,14 @@ export default function LibraryActions({ item, type: forcedType }: { item: Media
   return (
     <div>
       <div className="flex flex-wrap gap-2">
-        <button disabled={busy} onClick={() => toggle("liked")} className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition ${row.liked ? "border-gold-400/40 bg-gold-400/15 text-gold-200" : "border-white/10 bg-white/[0.04] text-white/65 hover:text-white"}`}>
+        <button disabled={busy} onClick={() => toggle("liked")} className={`inline-flex items-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium transition ${row.liked ? "border-gold-400/40 bg-gold-400/15 text-gold-200" : "border-white/10 bg-white/[0.04] text-white/65 hover:text-white"}`}>
           <Heart size={15} fill={row.liked ? "currentColor" : "none"} /> {row.liked ? "Liked" : "Like"}
         </button>
-        <button disabled={busy} onClick={() => toggle("watch_later")} className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition ${row.watch_later ? "border-gold-400/40 bg-gold-400/15 text-gold-200" : "border-white/10 bg-white/[0.04] text-white/65 hover:text-white"}`}>
+        <button disabled={busy} onClick={() => toggle("watch_later")} className={`inline-flex items-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium transition ${row.watch_later ? "border-gold-400/40 bg-gold-400/15 text-gold-200" : "border-white/10 bg-white/[0.04] text-white/65 hover:text-white"}`}>
           <Bookmark size={15} fill={row.watch_later ? "currentColor" : "none"} /> {row.watch_later ? "Saved" : "Watch later"}
         </button>
       </div>
-      {notice ? <div className="mt-3 rounded-xl border border-white/10 bg-white/[0.03] p-3 text-xs text-white/55"><div className="mb-2 flex items-center gap-2"><LogIn size={13} />{notice}</div><GoogleSignInButton className="px-3 py-2 text-xs" /></div> : null}
+      {notice ? <div className="mt-3 rounded-md border border-white/10 bg-white/[0.03] p-3 text-xs text-white/55"><div className="mb-2 flex items-center gap-2"><LogIn size={13} />{notice}</div><GoogleSignInButton className="px-3 py-2 text-xs" /></div> : null}
     </div>
   );
 }

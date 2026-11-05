@@ -63,7 +63,7 @@ export default function OttSection() {
             key={provider.provider_id}
             href={`/streaming/${provider.slug}`}
             aria-label={`Open ${PROVIDER_LABELS[provider.slug] || provider.provider_name}`}
-            className="group flex h-[108px] min-w-0 items-center justify-center overflow-hidden rounded-[24px] border border-white/[0.07] bg-surface px-5 transition duration-300 hover:-translate-y-1 hover:border-gold-400/50 hover:shadow-[0_22px_50px_-22px_rgba(217,164,65,0.45)]"
+            className="group flex h-[108px] min-w-0 items-center justify-center overflow-hidden rounded-lg border border-white/[0.07] bg-surface px-5 transition duration-300 hover:-translate-y-1 hover:border-gold-400/50 hover:shadow-[0_22px_50px_-22px_rgba(217,164,65,0.45)]"
           >
             <ProviderLogo provider={provider} />
           </Link>

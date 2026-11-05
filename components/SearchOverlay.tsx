@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { Search, X, Star, Film, Tv, Clock, Flame } from "lucide-react";
+import { Search, X, Star, Film, Tv, Clock, Flame } from "@/components/ui/icons";
 import { Media, backdrop, mediaType, poster, titleOf, yearOf } from "@/lib/tmdb";
 import MediaPreviewModal from "./MediaPreviewModal";
 
@@ -96,9 +96,9 @@ export default function SearchOverlay({ open, onClose }: { open: boolean; onClos
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[120] bg-ink/85 px-3 pt-3 backdrop-blur-xl sm:px-4 sm:pt-6" role="dialog" aria-modal="true" aria-label="Search">
+    <div className="fixed inset-0 z-[120] bg-ink/92 px-3 pt-3 sm:px-4 sm:pt-6" role="dialog" aria-modal="true" aria-label="Search">
       <div className="mx-auto max-w-[1180px]">
-        <div className="pop-in flex items-center gap-3 rounded-2xl border border-gold-400/30 bg-surface p-3 shadow-glow">
+        <div className="pop-in flex items-center gap-3 rounded-lg border border-gold-400/30 bg-surface p-3 shadow-2xl">
           <Search className="ml-2 text-gold-400" size={20} />
           <input
             ref={inputRef}
@@ -111,7 +111,7 @@ export default function SearchOverlay({ open, onClose }: { open: boolean; onClos
           <button
             onClick={onClose}
             aria-label="Close search"
-            className="grid h-9 w-9 place-items-center rounded-xl text-white/55 hover:bg-white/10 hover:text-white"
+            className="grid h-9 w-9 place-items-center rounded-md text-white/55 hover:bg-white/10 hover:text-white"
           >
             <X size={19} />
           </button>
@@ -139,7 +139,7 @@ export default function SearchOverlay({ open, onClose }: { open: boolean; onClos
                 <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-white/80"><Flame size={14} className="text-gold-400" /> Jump to</h3>
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                   {[["Movies", "/movies"], ["Shows", "/shows"], ["Anime", "/anime"], ["Streaming apps", "/streaming"]].map(([label, href]) => (
-                    <Link key={href} href={href} onClick={onClose} className="rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-4 text-sm font-medium text-white/80 transition hover:border-gold-400/50 hover:text-gold-100">
+                    <Link key={href} href={href} onClick={onClose} className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-4 text-sm font-medium text-white/80 transition hover:border-gold-400/50 hover:text-gold-100">
                       {label}
                     </Link>
                   ))}
@@ -147,14 +147,14 @@ export default function SearchOverlay({ open, onClose }: { open: boolean; onClos
               </div>
             </div>
           ) : loading ? (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-6">{Array.from({ length: 6 }).map((_, i) => <div key={i} className="skeleton aspect-[2/3] rounded-2xl" />)}</div>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-6">{Array.from({ length: 6 }).map((_, i) => <div key={i} className="skeleton aspect-[2/3] rounded-lg" />)}</div>
           ) : !featured ? (
             <div className="py-16 text-center text-sm text-white/55">No matches for “{query.trim()}”. Check the spelling or try a shorter title.</div>
           ) : (
             <>
               <button
                 onClick={() => choose(featured)}
-                className="group relative block min-h-[260px] w-full overflow-hidden rounded-3xl border border-white/10 bg-surface text-left"
+                className="group relative block min-h-[260px] w-full overflow-hidden rounded-lg border border-white/10 bg-surface text-left"
               >
                 {featured.backdrop_path ? (
                   <img
@@ -203,7 +203,7 @@ export default function SearchOverlay({ open, onClose }: { open: boolean; onClos
                         onClick={() => choose(item)}
                         className="group w-full text-left"
                       >
-                        <div className="aspect-[2/3] overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.03]">
+                        <div className="aspect-[2/3] overflow-hidden rounded-lg border border-white/[0.07] bg-white/[0.03]">
                           <img
                             src={poster(item.poster_path)}
                             alt={titleOf(item)}

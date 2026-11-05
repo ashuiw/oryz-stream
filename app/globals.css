@@ -1,21 +1,17 @@
 @import "tailwindcss";
 
-/* ───────────────────────────────────────────────────────────
-   Oryz design tokens — gold leaf on warm black.
-   Overriding white / zinc / yellow here re-tints every existing
-   utility (text-white/60, bg-white/5, text-zinc-500 …) so the
-   whole site follows the new brand without touching each class.
-   ─────────────────────────────────────────────────────────── */
+/* Oryz design tokens — warm black, one flat gold. Overriding white / zinc here
+   re-tints every existing utility (text-white/60, bg-white/5 …). */
 @theme {
-  --color-ink: #110f0b;
-  --color-ink-2: #17140f;
-  --color-surface: #1c1913;
-  --color-surface-2: #25211a;
+  --color-ink: #0e0d0a;
+  --color-ink-2: #15130e;
+  --color-surface: #1b1812;
+  --color-surface-2: #24201a;
 
   --color-gold-50: #fbf4de;
   --color-gold-100: #f6e8b8;
   --color-gold-200: #f1dd9f;
-  --color-gold-300: #ecd08a;
+  --color-gold-300: #e8c978;
   --color-gold-400: #e0b457;
   --color-gold-500: #d9a441;
   --color-gold-600: #b98a30;
@@ -23,8 +19,8 @@
   --color-gold-800: #5f4719;
   --color-gold-900: #3a2c10;
 
-  --color-white: #f7efdc;
-  --color-yellow-300: #ecd08a;
+  --color-white: #f3ecdb;
+  --color-yellow-300: #e8c978;
   --color-zinc-300: #cfc6b2;
   --color-zinc-400: #a89f8c;
   --color-zinc-500: #857d6c;
@@ -33,23 +29,18 @@
   --color-zinc-800: #27241d;
   --color-zinc-900: #1a1712;
 
-  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
-
-  --shadow-glow: 0 0 0 1px rgba(217, 164, 65, 0.35), 0 18px 60px -12px rgba(217, 164, 65, 0.35);
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-archivo), "Arial Narrow", Impact, sans-serif;
 }
 
 :root {
   color-scheme: dark;
-  --gold-grad: linear-gradient(135deg, #f1dd9f 0%, #d9a441 52%, #a8832f 100%);
-  --line: rgba(236, 208, 138, 0.12);
-  --nav-h: 68px;
-  --tabbar-h: 64px;
+  --gold: #d9a441;
+  --line: rgba(243, 236, 219, 0.11);
+  --tabbar-h: 60px;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 html {
   scroll-behavior: smooth;
@@ -63,75 +54,73 @@ body {
   min-height: 100dvh;
   color: var(--color-white);
   font-family: var(--font-sans);
-  background:
-    radial-gradient(60rem 36rem at 85% -8%, rgba(217, 164, 65, 0.10), transparent 60%),
-    radial-gradient(48rem 30rem at -5% 28%, rgba(143, 106, 37, 0.07), transparent 60%),
-    var(--color-ink);
-  background-attachment: fixed;
+  background: var(--color-ink);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
 
+/* Fine film grain — keeps flat black from looking digital */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Headlines: Archivo at a narrow width, poster-like */
 h1, h2 {
   font-family: var(--font-display);
-  letter-spacing: -0.02em;
+  font-stretch: 76%;
+  font-weight: 800;
+  letter-spacing: -0.005em;
+  line-height: 1;
 }
 
-button, a {
-  -webkit-tap-highlight-color: transparent;
-}
+button, a { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+img { user-select: none; }
 
-button {
-  cursor: pointer;
-}
+::selection { background: rgba(217, 164, 65, 0.35); color: #fff; }
 
-img {
-  user-select: none;
-}
-
-::selection {
-  background: rgba(217, 164, 65, 0.35);
-  color: #fff;
-}
-
-/* Visible keyboard focus everywhere */
-:focus-visible {
-  outline: 2px solid var(--color-gold-400);
-  outline-offset: 2px;
-  border-radius: 10px;
-}
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(236, 208, 138, 0.16); border-radius: 999px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(236, 208, 138, 0.3); }
+::-webkit-scrollbar-thumb { background: rgba(243, 236, 219, 0.16); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(243, 236, 219, 0.3); }
 
 .scrollbar-none { scrollbar-width: none; }
 .scrollbar-none::-webkit-scrollbar { display: none; }
 
-/* ── Brand utilities ───────────────────────────────────── */
-.gold-text {
-  background: var(--gold-grad);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
+/* ── Brand utilities (flat, no gradients) ─────────────── */
+.gold-text { color: var(--gold); }
 
 .gold-btn {
-  background: var(--gold-grad);
+  background: var(--gold);
   color: var(--color-ink);
   font-weight: 700;
-  box-shadow: 0 10px 30px -10px rgba(217, 164, 65, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.35);
-  transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 6px;
+  transition: background-color 0.18s ease, transform 0.18s ease;
 }
-.gold-btn:hover { filter: brightness(1.07); transform: translateY(-1px); }
-.gold-btn:active { transform: translateY(0); }
+.gold-btn:hover { background: #e8b85a; }
+.gold-btn:active { transform: translateY(1px); }
 
+.ghost-btn {
+  border: 1px solid rgba(243, 236, 219, 0.28);
+  border-radius: 6px;
+  color: var(--color-white);
+  font-weight: 600;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
+}
+.ghost-btn:hover { border-color: var(--gold); background: rgba(217, 164, 65, 0.08); }
+
+/* Solid panel (kept under the old .glass name used across components) */
 .glass {
-  background: rgba(23, 20, 15, 0.62);
+  background: rgba(14, 13, 10, 0.92);
   border: 1px solid var(--line);
-  backdrop-filter: blur(22px) saturate(1.2);
-  -webkit-backdrop-filter: blur(22px) saturate(1.2);
 }
 
 .kbd {
@@ -140,80 +129,73 @@ img {
   min-width: 22px;
   height: 22px;
   padding: 0 6px;
-  border-radius: 7px;
+  border-radius: 4px;
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.04);
   font-size: 11px;
   font-weight: 600;
-  color: rgba(247, 239, 220, 0.55);
+  color: rgba(243, 236, 219, 0.5);
 }
 
+/* Section header: hairline rule, then a heavy condensed title */
+.section-head {
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+}
 .section-title {
   font-family: var(--font-display);
-  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-stretch: 76%;
+  font-weight: 800;
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  line-height: 1;
+  letter-spacing: 0;
 }
 
 /* Poster cards */
-.poster-card .poster-frame {
-  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.3s ease, box-shadow 0.35s ease;
-}
+.poster-card .poster-frame { transition: border-color 0.2s ease; }
 .poster-card:hover .poster-frame,
-.poster-card:focus-visible .poster-frame {
-  transform: translateY(-4px);
-  border-color: rgba(224, 180, 87, 0.55);
-  box-shadow: 0 22px 50px -18px rgba(217, 164, 65, 0.4);
+.poster-card:focus-visible .poster-frame { border-color: var(--gold); }
+
+/* Top 10 numerals */
+.rank-num {
+  font-family: var(--font-display);
+  font-stretch: 76%;
+  font-weight: 900;
+  line-height: 0.8;
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(217, 164, 65, 0.85);
+  user-select: none;
 }
 
-/* Skeleton shimmer */
 .skeleton {
-  background: linear-gradient(100deg, rgba(255,255,255,0.03) 30%, rgba(236,208,138,0.08) 50%, rgba(255,255,255,0.03) 70%);
+  background: linear-gradient(100deg, rgba(255,255,255,0.03) 30%, rgba(243,236,219,0.07) 50%, rgba(255,255,255,0.03) 70%);
   background-size: 200% 100%;
   animation: shimmer 1.6s linear infinite;
 }
 @keyframes shimmer { to { background-position: -200% 0; } }
 
-/* Hero: one orchestrated moment — progress fill on the active slide marker,
-   advancing the slide when it completes. */
+/* Hero slide marker fills, then advances the slide */
 .hero-progress > span {
   display: block;
   height: 100%;
   width: 0;
-  background: var(--gold-grad);
+  background: var(--gold);
   animation: hero-fill 7s linear forwards;
 }
 .hero-paused .hero-progress > span { animation-play-state: paused; }
 @keyframes hero-fill { to { width: 100%; } }
 
-@keyframes drift {
-  0%   { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0; }
-  15%  { opacity: 0.8; }
-  100% { transform: translate3d(-140px, 90px, 0) rotate(160deg); opacity: 0; }
-}
-.leaf {
-  position: absolute;
-  width: 18px;
-  height: 26px;
-  border-radius: 100% 0 100% 0;
-  background: var(--gold-grad);
-  opacity: 0;
-  animation: drift 11s ease-in infinite;
-}
-
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-@keyframes pop-in { from { opacity: 0; transform: translateY(8px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes pop-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 .pop-in { animation: pop-in 0.22s ease-out both; }
-.fade-in { animation: fade-in 0.4s ease both; }
+.fade-in { animation: fade-in 0.45s ease both; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .hero-progress > span { animation: none; width: 100%; }
-  .leaf, .skeleton, .pop-in, .fade-in { animation: none; }
+  .skeleton, .pop-in, .fade-in { animation: none; }
   * { transition-duration: 0.01ms !important; }
 }
 
-/* Mobile: leave room for the bottom tab bar */
 @media (max-width: 639px) {
   body { padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); }
   body.no-tabbar { padding-bottom: 0; }
@@ -222,8 +204,6 @@ img {
 /* ── Watch page (existing behaviour, re-tinted) ─────────── */
 .oryz-watch-page {
   background:
-    radial-gradient(circle at 82% 0%, rgba(217,164,65,.07), transparent 34rem),
-    radial-gradient(circle at 10% 24%, rgba(217,164,65,.035), transparent 30rem),
     var(--color-ink);
 }
 

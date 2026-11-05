@@ -23,7 +23,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
     : "N/A";
 
   return (
-    <article className="group overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/80 shadow-lg transition duration-300 hover:-translate-y-1 hover:border-white/20">
+    <article className="group overflow-hidden rounded-lg border border-white/10 bg-zinc-900/80 shadow-lg transition duration-300 hover:-translate-y-1 hover:border-white/20">
       <div className="relative aspect-[2/3] overflow-hidden bg-zinc-800">
         <img
           src={poster}
@@ -36,7 +36,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
 
         <button
           onClick={() => router.push(`/watch/${movie.id}`)}
-          className="absolute bottom-4 left-4 right-4 rounded-xl bg-white px-4 py-2.5 font-semibold text-black opacity-0 transition duration-300 group-hover:opacity-100 hover:bg-zinc-200"
+          className="absolute bottom-4 left-4 right-4 rounded-md bg-white px-4 py-2.5 font-semibold text-black opacity-0 transition duration-300 group-hover:opacity-100 hover:bg-zinc-200"
         >
           Watch
         </button>

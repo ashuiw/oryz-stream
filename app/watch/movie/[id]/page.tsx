@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "@/components/ui/icons";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { backdrop, poster } from "@/lib/tmdb";
@@ -49,7 +49,7 @@ export default function MovieWatchPage() {
           <ArrowLeft size={16} /> Back
         </Link>
 
-        <div className="oryz-player-frame overflow-hidden rounded-[22px] border border-white/[0.08] bg-black p-3 shadow-2xl sm:p-4">
+        <div className="oryz-player-frame overflow-hidden rounded-lg border border-white/[0.08] bg-black p-3 shadow-2xl sm:p-4">
             <VidKingWatchFrame
               mediaType="movie"
               mediaId={movie.id}
@@ -61,8 +61,8 @@ export default function MovieWatchPage() {
             />
         </div>
 
-        <section className="mt-7 grid gap-6 rounded-[22px] border border-white/[0.06] bg-white/[0.02] p-4 sm:p-5 md:grid-cols-[180px_minmax(0,1fr)]">
-          <img src={poster(movie.poster_path, "w500")} alt={movie.title} className="w-full rounded-2xl object-cover" />
+        <section className="mt-7 grid gap-6 rounded-lg border border-white/[0.06] bg-white/[0.02] p-4 sm:p-5 md:grid-cols-[180px_minmax(0,1fr)]">
+          <img src={poster(movie.poster_path, "w500")} alt={movie.title} className="w-full rounded-lg object-cover" />
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-white/35">Oryz · Now playing</p>
             <h1 className="mt-2 text-3xl font-bold sm:text-4xl">{movie.title}</h1>
@@ -85,5 +85,5 @@ function Loading() {
   return <div className="grid min-h-screen place-items-center bg-ink text-sm text-white/40">Loading...</div>;
 }
 function WatchError({ message }: { message: string }) {
-  return <div className="grid min-h-screen place-items-center bg-ink px-6 text-center text-white"><div><h1 className="text-2xl font-bold">Unable to load this movie</h1><p className="mt-2 text-white/45">{message}</p><Link href="/" className="mt-5 inline-block rounded-xl bg-white px-5 py-3 text-sm font-semibold text-black">Back home</Link></div></div>;
+  return <div className="grid min-h-screen place-items-center bg-ink px-6 text-center text-white"><div><h1 className="text-2xl font-bold">Unable to load this movie</h1><p className="mt-2 text-white/45">{message}</p><Link href="/" className="mt-5 inline-block rounded-md bg-white px-5 py-3 text-sm font-semibold text-black">Back home</Link></div></div>;
 }

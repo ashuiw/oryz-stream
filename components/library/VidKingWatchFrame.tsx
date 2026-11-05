@@ -165,7 +165,7 @@ export default function VidKingWatchFrame(
               relative
               w-full
               max-w-[400px]
-              rounded-2xl
+              rounded-lg
               border
               border-white/10
               bg-ink-2/95

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ArrowUp } from "lucide-react";
+import { ArrowUp } from "@/components/ui/icons";
 
 export default function BackToTop() {
   const [show, setShow] = useState(false);
@@ -18,7 +18,7 @@ export default function BackToTop() {
       type="button"
       aria-label="Back to top"
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className={`glass fixed right-4 z-[90] grid h-11 w-11 place-items-center rounded-full text-gold-300 shadow-xl transition duration-300 hover:text-gold-100 bottom-[calc(var(--tabbar-h)+16px+env(safe-area-inset-bottom))] sm:bottom-6 ${
+      className={`glass fixed right-4 z-[90] grid h-11 w-11 place-items-center rounded-md text-gold-400 transition duration-300 hover:border-gold-500 bottom-[calc(var(--tabbar-h)+16px+env(safe-area-inset-bottom))] sm:bottom-6 ${
         show ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0"
       }`}
     >

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "@/components/ui/icons";
 
 /** Horizontal, snap-scrolling shelf with arrow controls on pointer devices. */
 export default function ScrollRow({
@@ -45,16 +45,17 @@ export default function ScrollRow({
   }
 
   return (
-    <section className="mx-auto max-w-[1280px] px-4 py-7 sm:px-5">
-      <div className="mb-4 flex items-end justify-between gap-4">
+    <section className="mx-auto max-w-[1280px] px-4 py-6 sm:px-5">
+      <div className="section-head mb-5 flex items-end justify-between gap-4">
         <div className="min-w-0">
           <h2 className="section-title">{title}</h2>
           {subtitle ? <p className="mt-1 text-sm text-white/45">{subtitle}</p> : null}
         </div>
         <div className="flex shrink-0 items-center gap-2">
           {href ? (
-            <Link href={href} className="rounded-lg px-2 py-1.5 text-sm text-gold-300 transition hover:bg-white/[0.06] hover:text-gold-100">
+            <Link href={href} className="inline-flex items-center gap-1.5 py-1.5 text-sm font-semibold text-gold-400 transition hover:text-gold-200">
               {hrefLabel}
+              <ChevronRight size={14} />
             </Link>
           ) : null}
           <div className="hidden gap-1.5 md:flex">
@@ -63,18 +64,18 @@ export default function ScrollRow({
               aria-label="Scroll left"
               disabled={!canPrev}
               onClick={() => page(-1)}
-              className="grid h-9 w-9 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-white/70 transition hover:border-gold-400/50 hover:text-gold-200 disabled:opacity-25"
+              className="grid h-9 w-9 place-items-center rounded-md border border-white/15 text-white/70 transition hover:border-gold-500 hover:text-gold-300 disabled:opacity-25"
             >
-              <ChevronLeft size={17} />
+              <ChevronLeft size={16} />
             </button>
             <button
               type="button"
               aria-label="Scroll right"
               disabled={!canNext}
               onClick={() => page(1)}
-              className="grid h-9 w-9 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-white/70 transition hover:border-gold-400/50 hover:text-gold-200 disabled:opacity-25"
+              className="grid h-9 w-9 place-items-center rounded-md border border-white/15 text-white/70 transition hover:border-gold-500 hover:text-gold-300 disabled:opacity-25"
             >
-              <ChevronRight size={17} />
+              <ChevronRight size={16} />
             </button>
           </div>
         </div>

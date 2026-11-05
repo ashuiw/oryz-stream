@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ShieldCheck } from "@/components/ui/icons";
 import { redirect } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -18,7 +18,7 @@ export default async function LoginPage() {
     <div className="min-h-screen text-white">
       <Navbar />
       <main className="mx-auto flex min-h-[calc(100vh-140px)] w-[min(520px,calc(100%-28px))] items-center py-16">
-        <section className="w-full relative overflow-hidden rounded-3xl border border-gold-400/20 bg-surface/80 p-7 text-center shadow-glow backdrop-blur-xl sm:p-10">
+        <section className="w-full relative overflow-hidden rounded-lg border border-gold-400/20 bg-surface/80 p-7 text-center shadow-glow backdrop-blur-xl sm:p-10">
           <div className="mx-auto grid h-20 w-20 place-items-center"><LogoMark size={80} /></div>
           <h1 className="mt-6 text-3xl font-semibold sm:text-4xl">Sign in to your library</h1>
           <p className="mt-3 text-sm leading-6 text-white/45">Save favorites, keep a watch-later list, and continue movies and episodes from where you stopped.</p>

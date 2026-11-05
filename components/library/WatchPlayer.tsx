@@ -11,7 +11,7 @@ import {
   Check,
   ChevronDown,
   Server,
-} from "lucide-react";
+} from "@/components/ui/icons";
 
 import WatchProgressTracker from "./WatchProgressTracker";
 
