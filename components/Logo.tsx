@@ -24,8 +24,8 @@ export function LogoMark({ size = 36, className = "" }: { size?: number; classNa
       {[0, 120, 240].map((deg) => (
         <path key={deg} d={petal} fill={`url(#g-${id})`} transform={`rotate(${deg} 540 540)`} />
       ))}
-      <circle cx="540" cy="540" r="25" fill="#110f0b" />
-      <circle cx="540" cy="540" r="11" fill="#f5de93" />
+      <circle cx="540" cy="540" r="68" fill="#110f0b" />
+      <path d="M520 503c-5-3-11 1-11 7v60c0 6 6 10 11 7l60-36c5-3 5-11 0-14z" fill="#f5de93" />
     </svg>
   );
 }

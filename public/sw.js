@@ -1,4 +1,4 @@
-const CACHE_NAME = "oryz-static-v1";
+const CACHE_NAME = "oryz-static-v2";
 const APP_SHELL = [
   "/",
   "/offline.html",
