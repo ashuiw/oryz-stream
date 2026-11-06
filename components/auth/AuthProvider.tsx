@@ -1,5 +1,6 @@
 "use client";
 
+import { useToast } from "@/components/ui/Toast";
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import type { AuthChangeEvent, Session, User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
@@ -26,6 +27,7 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const toast = useToast();
   const supabase = useMemo(() => createClient(), []);
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -76,16 +78,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [supabase]);
 
   async function signInWithGoogle() {
+    toast.info("Redirecting to Google…");
     const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(window.location.pathname + window.location.search)}`;
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo },
     });
-    if (error) throw error;
+    if (error) {
+      toast.error("Could not start Google sign-in. Please try again.");
+      throw error;
+    }
   }
 
   async function signOut() {
-    await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast.error("Could not sign you out. Please try again.");
+      return;
+    }
+    try {
+      sessionStorage.setItem("oryz:flash", "You are signed out.");
+    } catch {}
     window.location.href = "/";
   }
 

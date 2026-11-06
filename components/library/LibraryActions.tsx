@@ -6,12 +6,14 @@ import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/components/auth/AuthProvider";
 import type { Media } from "@/lib/tmdb";
 import { mediaType, poster, titleOf, yearOf } from "@/lib/tmdb";
+import { useToast } from "@/components/ui/Toast";
 import GoogleSignInButton from "@/components/auth/GoogleSignInButton";
 
 type Row = { liked: boolean; watch_later: boolean };
 
 export default function LibraryActions({ item, type: forcedType }: { item: Media; type?: "movie" | "tv" }) {
   const { user } = useAuth();
+  const toast = useToast();
   const supabase = createClient();
   const type = forcedType || mediaType(item);
   const [row, setRow] = useState<Row>({ liked: false, watch_later: false });
@@ -45,9 +47,16 @@ export default function LibraryActions({ item, type: forcedType }: { item: Media
       .upsert(payload, { onConflict: "user_id,media_type,media_id" })
       .select("liked,watch_later")
       .single();
-    if (error) setNotice(error.message);
-    else if (savedRow) {
+    if (error) {
+      toast.error(field === "liked" ? "Could not update your likes. Please try again." : "Could not update your watch-later list. Please try again.");
+    } else if (savedRow) {
       setRow({ liked: !!savedRow.liked, watch_later: !!savedRow.watch_later });
+      const title = titleOf(item);
+      toast.success(
+        field === "liked"
+          ? next ? `Added ${title} to your likes.` : `Removed ${title} from your likes.`
+          : next ? `Saved ${title} to watch later.` : `Removed ${title} from watch later.`,
+      );
     }
     setBusy(false);
   }

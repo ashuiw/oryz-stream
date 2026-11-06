@@ -3,6 +3,7 @@ import { Archivo, Hanken_Grotesk } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
+import { ToastProvider } from "@/components/ui/Toast";
 import BackToTop from "@/components/BackToTop";
 import WhatsNewModal from "@/components/WhatsNewModal";
 
@@ -27,8 +28,10 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  ...(process.env.NEXT_PUBLIC_SITE_URL ? { metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL) } : {}),
+  applicationName: "Oryz",
   title: { default: "Oryz — movies, shows and anime", template: "%s · Oryz" },
-  description: "Discover movies, shows and anime with Oryz.",
+  description: "Oryz is a fast, clean place to discover movies, TV shows and anime, save favorites and pick up where you left off.",
   manifest: "/manifest.webmanifest",
   icons: {
     icon: [
@@ -60,9 +63,11 @@ export default function RootLayout({
     <html lang="en" className={`${archivo.variable} ${hanken.variable}`}>
       <body>
         <ServiceWorkerRegistration />
-        <AuthProvider>{children}</AuthProvider>
-        <BackToTop />
-        <WhatsNewModal />
+        <ToastProvider>
+          <AuthProvider>{children}</AuthProvider>
+          <BackToTop />
+          <WhatsNewModal />
+        </ToastProvider>
       </body>
     </html>
   );

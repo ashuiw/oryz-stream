@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import { ArrowRight, UserRound } from "@/components/ui/icons";
 import type { User } from "@supabase/supabase-js";
+import { useToast } from "@/components/ui/Toast";
 import { createClient } from "@/lib/supabase/client";
 
 export default function ProfileSetupModal({ user, onSaved }: { user: User; onSaved: () => Promise<void> }) {
   const supabase = createClient();
+  const toast = useToast();
   const suggested = (user.user_metadata?.full_name || user.user_metadata?.name || "").trim();
   const [name, setName] = useState(suggested);
   const [saving, setSaving] = useState(false);
@@ -33,10 +35,12 @@ export default function ProfileSetupModal({ user, onSaved }: { user: User; onSav
     }, { onConflict: "id" });
     if (saveError) {
       setError(saveError.message);
+      toast.error("Could not save your profile. Please try again.");
       setSaving(false);
       return;
     }
     await onSaved();
+    toast.success(`Welcome to Oryz, ${displayName}!`);
     setSaving(false);
   }
 

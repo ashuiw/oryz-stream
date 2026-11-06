@@ -31,17 +31,21 @@ export default function ContinueWatching() {
       return;
     }
     let cancelled = false;
-    createClient()
-      .from("watch_progress")
-      .select("media_type,media_id,season_number,episode_number,episode_name,title,poster_path,backdrop_path,progress_percent")
-      .eq("user_id", user.id)
-      .lt("progress_percent", 95)
-      .gt("position_seconds", 5)
-      .order("updated_at", { ascending: false })
-      .limit(12)
-      .then(({ data, error }: { data: unknown[] | null; error: unknown }) => {
-        if (!cancelled && !error) setRows((data || []) as Row[]);
-      });
+    const userId = user.id;
+
+    async function load() {
+      const { data, error } = await createClient()
+        .from("watch_progress")
+        .select("media_type,media_id,season_number,episode_number,episode_name,title,poster_path,backdrop_path,progress_percent")
+        .eq("user_id", userId)
+        .lt("progress_percent", 95)
+        .gt("position_seconds", 5)
+        .order("updated_at", { ascending: false })
+        .limit(12);
+      if (!cancelled && !error) setRows((data || []) as Row[]);
+    }
+
+    load().catch(() => {});
     return () => {
       cancelled = true;
     };

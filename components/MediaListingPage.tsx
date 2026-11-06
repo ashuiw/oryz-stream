@@ -1,5 +1,6 @@
 "use client";
 
+import { useToast } from "@/components/ui/Toast";
 import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "@/components/ui/icons";
 import Navbar from "./Navbar";
@@ -44,6 +45,7 @@ export default function MediaListingPage({
 
   const genres = isAnime ? animeGenres : isMovie ? movieGenres : tvGenres;
 
+  const toast = useToast();
   const [genre, setGenre] = useState("");
   const [sort, setSort] = useState<"popular" | "rating" | "newest">("popular");
   const [items, setItems] = useState<Media[]>([]);
@@ -70,11 +72,12 @@ export default function MediaListingPage({
           signal: controller.signal,
         });
         const data = await res.json();
+        if (!res.ok) throw new Error(data?.error || "Request failed");
 
         setItems(data.results || []);
         setTotalPages(Math.min(data.total_pages || 1, 500));
       } catch (error) {
-        if ((error as Error).name !== "AbortError") console.error(error);
+        if ((error as Error).name !== "AbortError") toast.error("Could not load titles. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -112,20 +115,21 @@ export default function MediaListingPage({
 
         <div className="grid gap-8 lg:grid-cols-[210px_minmax(0,1fr)]">
           <aside className="lg:sticky lg:top-24 lg:h-fit">
-            <div className="rounded-lg border border-gold-400/15 bg-white/[0.025] p-2">
-              <div className="mb-2 px-3 py-2 text-sm font-semibold text-gold-200">
+            <div className="lg:rounded-lg lg:border lg:border-white/10 lg:bg-white/[0.025] lg:p-2">
+              <div className="mb-2 hidden px-3 py-2 text-sm font-semibold text-gold-200 lg:block">
                 Genres
               </div>
 
-              <div className="grid max-h-[65vh] gap-1 overflow-y-auto pr-1">
+              <div className="scrollbar-none -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-5 sm:px-5 lg:mx-0 lg:grid lg:max-h-[65vh] lg:gap-1 lg:overflow-y-auto lg:px-0 lg:pb-0 lg:pr-1">
                 {visibleGenres.map(([label, value]) => (
                   <button
                     key={`${label}-${value}`}
                     onClick={() => selectGenre(value)}
-                    className={`rounded-md px-3 py-2.5 text-left text-sm transition ${
+                    aria-pressed={genre === value}
+                    className={`shrink-0 whitespace-nowrap rounded-md border px-3.5 py-2 text-left text-sm transition lg:border-transparent lg:py-2.5 ${
                       genre === value
-                        ? "bg-gold-400/15 font-medium text-gold-100"
-                        : "text-white/50 hover:bg-white/[0.05] hover:text-white"
+                        ? "border-gold-500 bg-gold-500/15 font-semibold text-gold-100"
+                        : "border-white/15 text-white/60 hover:text-white lg:hover:bg-white/[0.05]"
                     }`}
                   >
                     {label}

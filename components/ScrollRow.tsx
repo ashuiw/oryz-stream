@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "@/components/ui/icons";
+import { gsap } from "@/lib/gsap";
 
 /** Horizontal, snap-scrolling shelf with arrow controls on pointer devices. */
 export default function ScrollRow({
@@ -19,6 +20,7 @@ export default function ScrollRow({
   children: React.ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
 
@@ -38,6 +40,28 @@ export default function ScrollRow({
     return () => ro.disconnect();
   }, [update, children]);
 
+  // Cards rise in one after another the first time the shelf scrolls into view.
+  useEffect(() => {
+    const section = sectionRef.current;
+    const track = ref.current;
+    if (!section || !track) return;
+    const mm = gsap.matchMedia();
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      const cards = Array.from(track.children).slice(0, 10);
+      gsap.fromTo(
+        section.querySelector(".section-head"),
+        { autoAlpha: 0, y: 18 },
+        { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out", scrollTrigger: { trigger: section, start: "top 88%", once: true } },
+      );
+      gsap.fromTo(
+        cards,
+        { autoAlpha: 0, y: 32 },
+        { autoAlpha: 1, y: 0, duration: 0.7, ease: "power3.out", stagger: 0.06, scrollTrigger: { trigger: track, start: "top 92%", once: true } },
+      );
+    });
+    return () => mm.revert();
+  }, []);
+
   function page(dir: 1 | -1) {
     const el = ref.current;
     if (!el) return;
@@ -45,7 +69,7 @@ export default function ScrollRow({
   }
 
   return (
-    <section className="mx-auto max-w-[1280px] px-4 py-6 sm:px-5">
+    <section ref={sectionRef} className="mx-auto max-w-[1280px] px-4 py-6 sm:px-5">
       <div className="section-head mb-5 flex items-end justify-between gap-4">
         <div className="min-w-0">
           <h2 className="section-title">{title}</h2>

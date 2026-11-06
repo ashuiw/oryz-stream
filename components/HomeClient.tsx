@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, ChevronLeft, ChevronRight, Dice, Info, Play, Star } from "@/components/ui/icons";
 import { useSearchParams } from "next/navigation";
@@ -10,10 +10,13 @@ import OttSection from "./OttSection";
 import MediaGrid from "./MediaGrid";
 import MediaCard from "./MediaCard";
 import ScrollRow from "./ScrollRow";
+import Reveal from "./motion/Reveal";
+import { gsap } from "@/lib/gsap";
 import ContinueWatching from "./ContinueWatching";
 import SearchOverlay from "./SearchOverlay";
 import MediaPreviewModal from "./MediaPreviewModal";
 import { useAuth } from "./auth/AuthProvider";
+import { useToast } from "@/components/ui/Toast";
 import { Media, backdrop, mediaType, poster, titleOf, yearOf } from "@/lib/tmdb";
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -32,6 +35,7 @@ const moods = [
 export default function HomeClient() {
   const searchParams = useSearchParams();
   const { user } = useAuth();
+  const toast = useToast();
   const [searchOpen, setSearchOpen] = useState(searchParams.get("search") === "open");
   const [trending, setTrending] = useState<Media[]>([]);
   const [top10, setTop10] = useState<Media[]>([]);
@@ -42,10 +46,23 @@ export default function HomeClient() {
   const [preview, setPreview] = useState<Media | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
+  const heroBgRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setSearchOpen(searchParams.get("search") === "open");
   }, [searchParams]);
+
+  useEffect(() => {
+    try {
+      const flash = sessionStorage.getItem("oryz:flash");
+      if (flash) {
+        sessionStorage.removeItem("oryz:flash");
+        toast.success(flash);
+      }
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
@@ -71,13 +88,31 @@ export default function HomeClient() {
       setShows((showsData.results || []).slice(0, 16));
     }
 
-    load().catch(console.error).finally(() => setLoaded(true));
+    load()
+      .catch(() => toast.error("Could not load titles. Check your connection and refresh."))
+      .finally(() => setLoaded(true));
   }, []);
 
   const hero = trending[heroIndex];
   const next = () => setHeroIndex((i) => (i + 1) % Math.max(trending.length, 1));
   const prev = () => setHeroIndex((i) => (i - 1 + trending.length) % Math.max(trending.length, 1));
   const upNext = trending.length > 1 ? [1, 2, 3].map((n) => trending[(heroIndex + n) % trending.length]) : [];
+
+  // Backdrop drifts slower than the page for a little depth.
+  useEffect(() => {
+    const section = heroRef.current;
+    const bg = heroBgRef.current;
+    if (!section || !bg) return;
+    const mm = gsap.matchMedia();
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      gsap.to(bg, {
+        yPercent: 12,
+        ease: "none",
+        scrollTrigger: { trigger: section, start: "top top", end: "bottom top", scrub: true },
+      });
+    });
+    return () => mm.revert();
+  }, []);
 
   // Pick something at random from everything already loaded on the page.
   function surprise() {
@@ -98,6 +133,7 @@ export default function HomeClient() {
       <main>
         {/* Hero */}
         <section
+          ref={heroRef}
           className={`relative -mt-16 overflow-hidden ${paused ? "hero-paused" : ""}`}
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
@@ -105,6 +141,7 @@ export default function HomeClient() {
           aria-label="Trending movies"
         >
           <div className="relative min-h-[600px] pt-16 sm:min-h-[680px]">
+            <div ref={heroBgRef} className="absolute inset-0 will-change-transform">
             {trending.map((m, i) => (
               <img
                 key={m.id}
@@ -114,6 +151,7 @@ export default function HomeClient() {
                 loading={i === 0 ? "eager" : "lazy"}
               />
             ))}
+            </div>
 
             <div className="absolute inset-0 bg-gradient-to-r from-ink/95 via-ink/55 to-ink/0" />
             <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/0 to-ink/0" />
@@ -282,7 +320,7 @@ export default function HomeClient() {
         <OttSection />
 
         {/* Banner band */}
-        <section className="mx-auto max-w-[1280px] px-4 py-6 sm:px-5">
+        <Reveal as="section" className="mx-auto max-w-[1280px] px-4 py-6 sm:px-5">
           <div
             className="relative overflow-hidden rounded-md border border-white/10"
             style={{ backgroundImage: "url(/brand/banner.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
@@ -301,10 +339,10 @@ export default function HomeClient() {
               </Link>
             </div>
           </div>
-        </section>
+        </Reveal>
 
         {/* Discover grid */}
-        <section className="mx-auto max-w-[1280px] px-4 py-8 sm:px-5">
+        <Reveal as="section" className="mx-auto max-w-[1280px] px-4 py-8 sm:px-5">
           <div className="section-head mb-6 flex items-end justify-between gap-4">
             <div>
               <h2 className="section-title">Find your next watch</h2>
@@ -325,7 +363,7 @@ export default function HomeClient() {
               ))}
             </div>
           )}
-        </section>
+        </Reveal>
       </main>
 
       <Footer />

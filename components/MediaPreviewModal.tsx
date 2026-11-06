@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { CalendarDays, Clock3, Play, Share, Star, Tv, Film, X, Users } from "@/components/ui/icons";
 import { Media, backdrop, mediaType, poster, titleOf, yearOf } from "@/lib/tmdb";
 import Link from "next/link";
+import { useToast } from "@/components/ui/Toast";
 import LibraryActions from "@/components/library/LibraryActions";
 
 type CastMember = { id: number; name: string; character?: string; profile_path?: string | null };
@@ -102,7 +103,7 @@ export default function MediaPreviewModal({
   const firstEpisode = episodes[0];
   const heroImage = detail?.backdrop_path || item?.backdrop_path;
   const cast = useMemo(() => detail?.credits?.cast?.slice(0, 8) || [], [detail]);
-  const [copied, setCopied] = useState(false);
+  const toast = useToast();
 
   async function share() {
     if (!item) return;
@@ -113,9 +114,10 @@ export default function MediaPreviewModal({
         return;
       }
       await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {}
+      toast.success("Link copied to your clipboard.");
+    } catch (e) {
+      if ((e as Error)?.name !== "AbortError") toast.error("Could not share this title. Copy the link from the watch page instead.");
+    }
   }
 
   if (!item) return null;
@@ -150,7 +152,7 @@ export default function MediaPreviewModal({
                   </Link>
                   <button onClick={share} className="ghost-btn inline-flex items-center gap-2 px-4 py-3 text-sm">
                     <Share size={17} weight="duotone" />
-                    {copied ? "Link copied" : "Share"}
+                    Share
                   </button>
                 </div>
                 <div className="mt-4"><LibraryActions item={item} type={type} /></div>

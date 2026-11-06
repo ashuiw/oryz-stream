@@ -38,6 +38,10 @@ export default function MovieWatchPage() {
       .catch((e) => setError(e.message));
   }, [id]);
 
+  useEffect(() => {
+    if (movie) document.title = `${movie.title} · Oryz`;
+  }, [movie]);
+
   if (error) return <WatchError message={error} />;
   if (!movie) return <Loading />;
 
@@ -45,7 +49,7 @@ export default function MovieWatchPage() {
     <div className="oryz-watch-page min-h-screen bg-ink text-white">
       <Navbar />
       <main className="mx-auto w-[min(1280px,calc(100%-28px))] pb-16 pt-10 sm:w-[min(1280px,calc(100%-40px))] sm:pt-12">
-        <Link href="/" className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-xs text-white/55 hover:text-white">
+        <Link href="/" className="mb-5 inline-flex items-center gap-2 rounded-md border border-white/15 px-3 py-2 text-sm text-white/70 transition hover:border-gold-500 hover:text-white">
           <ArrowLeft size={16} /> Back
         </Link>
 
@@ -64,15 +68,14 @@ export default function MovieWatchPage() {
         <section className="mt-7 grid gap-6 rounded-lg border border-white/[0.06] bg-white/[0.02] p-4 sm:p-5 md:grid-cols-[180px_minmax(0,1fr)]">
           <img src={poster(movie.poster_path, "w500")} alt={movie.title} className="w-full rounded-lg object-cover" />
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-white/35">Oryz · Now playing</p>
-            <h1 className="mt-2 text-3xl font-bold sm:text-4xl">{movie.title}</h1>
+            <h1 className="mt-0 text-4xl sm:text-5xl">{movie.title}</h1>
             <div className="mt-3 flex flex-wrap gap-3 text-sm text-white/45">
               {movie.release_date?.slice(0, 4) ? <span>{movie.release_date.slice(0, 4)}</span> : null}
               {movie.vote_average ? <span>★ {movie.vote_average.toFixed(1)}</span> : null}
               {movie.runtime ? <span>{Math.floor(movie.runtime / 60)}h {movie.runtime % 60}m</span> : null}
             </div>
             {movie.genres?.length ? <div className="mt-4 flex flex-wrap gap-2">{movie.genres.map((g) => <span key={g.id} className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-white/55">{g.name}</span>)}</div> : null}
-            <p className="mt-5 max-w-3xl leading-7 text-white/55">{movie.overview || "No description available."}</p>
+            <p className="mt-5 max-w-3xl leading-7 text-white/55">{movie.overview || "No synopsis has been added for this title yet."}</p>
           </div>
         </section>
       </main>
@@ -82,8 +85,8 @@ export default function MovieWatchPage() {
 }
 
 function Loading() {
-  return <div className="grid min-h-screen place-items-center bg-ink text-sm text-white/40">Loading...</div>;
+  return <div className="grid min-h-screen place-items-center bg-ink text-sm text-white/40"><span className="skeleton block h-10 w-40 rounded-md" aria-label="Loading" /></div>;
 }
 function WatchError({ message }: { message: string }) {
-  return <div className="grid min-h-screen place-items-center bg-ink px-6 text-center text-white"><div><h1 className="text-2xl font-bold">Unable to load this movie</h1><p className="mt-2 text-white/45">{message}</p><Link href="/" className="mt-5 inline-block rounded-md bg-white px-5 py-3 text-sm font-semibold text-black">Back home</Link></div></div>;
+  return <div className="grid min-h-screen place-items-center bg-ink px-6 text-center text-white"><div><h1 className="text-2xl font-bold">Unable to load this movie</h1><p className="mt-2 text-white/45">{message}</p><Link href="/" className="mt-5 inline-block gold-btn px-5 py-3 text-sm">Back home</Link></div></div>;
 }
