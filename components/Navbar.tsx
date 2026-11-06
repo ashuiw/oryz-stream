@@ -7,7 +7,6 @@ import AuthStatus from "@/components/auth/AuthStatus";
 import { useAuth } from "@/components/auth/AuthProvider";
 import Avatar from "@/components/auth/Avatar";
 import Logo from "@/components/Logo";
-import ScrollProgress from "@/components/motion/ScrollProgress";
 import { usePathname, useRouter } from "next/navigation";
 
 const links = [
@@ -125,7 +124,6 @@ export default function Navbar() {
             <div className="sm:hidden"><MobileAuth /></div>
           </div>
         </nav>
-        <ScrollProgress />
       </header>
 
       {/* Mobile bottom tab bar */}

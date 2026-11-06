@@ -59,7 +59,7 @@ export default function LibraryClient() {
       <main className="mx-auto flex min-h-[calc(100vh-150px)] w-[min(620px,calc(100%-28px))] items-center justify-center py-16">
         <section className="w-full rounded-lg border border-white/[0.07] bg-white/[0.025] p-8 text-center sm:p-10">
           <div className="mx-auto grid h-14 w-14 place-items-center rounded-lg bg-gold-500 text-ink"><Bookmark size={22} /></div>
-          <p className="mt-6 text-xs font-semibold uppercase tracking-[0.25em] text-white/35">Oryz Library</p>
+          <p className="mt-6 text-sm font-medium text-white/50">Oryz Library</p>
           <h1 className="mt-2 text-3xl font-bold">Your library starts here</h1>
           <p className="mt-3 text-sm leading-6 text-white/45">Sign in with Google to like titles, save watch-later picks, and continue movies and episodes from where you left off.</p>
           <GoogleSignInButton className="mt-7 px-6 py-3.5" />
@@ -77,7 +77,7 @@ export default function LibraryClient() {
       <Navbar />
       <main className="mx-auto w-[min(1280px,calc(100%-28px))] pb-16 pt-10 sm:w-[min(1280px,calc(100%-40px))] sm:pt-12">
         <section className="rounded-lg border border-white/[0.07] bg-white/[0.025] p-6 sm:p-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-white/35">Oryz / Library</p>
+          <p className="text-sm font-medium text-white/50">Oryz / Library</p>
           <h1 className="mt-2 text-3xl font-bold sm:text-4xl">{profile?.display_name ? `${profile.display_name}'s library` : "Your library"}</h1>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-white/45">Everything you save, like, and watch in one place.</p>
         </section>

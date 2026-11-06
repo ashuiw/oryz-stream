@@ -25,7 +25,7 @@ export function yearOf(item: Media) {
 }
 
 export function poster(path?: string | null, size = "w500") {
-  return path ? `${TMDB_IMAGE}/${size}${path}` : "/placeholder-poster.jpg";
+  return path ? `${TMDB_IMAGE}/${size}${path}` : "/placeholder-poster.svg";
 }
 
 export function backdrop(path?: string | null, size = "original") {

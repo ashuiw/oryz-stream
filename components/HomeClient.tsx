@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, ChevronLeft, ChevronRight, Dice, Info, Play, Star } from "@/components/ui/icons";
 import { useSearchParams } from "next/navigation";
@@ -11,7 +11,6 @@ import MediaGrid from "./MediaGrid";
 import MediaCard from "./MediaCard";
 import ScrollRow from "./ScrollRow";
 import Reveal from "./motion/Reveal";
-import { gsap } from "@/lib/gsap";
 import ContinueWatching from "./ContinueWatching";
 import SearchOverlay from "./SearchOverlay";
 import MediaPreviewModal from "./MediaPreviewModal";
@@ -46,8 +45,6 @@ export default function HomeClient() {
   const [preview, setPreview] = useState<Media | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
-  const heroRef = useRef<HTMLElement>(null);
-  const heroBgRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setSearchOpen(searchParams.get("search") === "open");
@@ -96,24 +93,7 @@ export default function HomeClient() {
   const hero = trending[heroIndex];
   const next = () => setHeroIndex((i) => (i + 1) % Math.max(trending.length, 1));
   const prev = () => setHeroIndex((i) => (i - 1 + trending.length) % Math.max(trending.length, 1));
-  const upNext = trending.length > 1 ? [1, 2, 3].map((n) => trending[(heroIndex + n) % trending.length]) : [];
-
-  // Backdrop drifts slower than the page for a little depth.
-  useEffect(() => {
-    const section = heroRef.current;
-    const bg = heroBgRef.current;
-    if (!section || !bg) return;
-    const mm = gsap.matchMedia();
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      gsap.to(bg, {
-        yPercent: 12,
-        ease: "none",
-        scrollTrigger: { trigger: section, start: "top top", end: "bottom top", scrub: true },
-      });
-    });
-    return () => mm.revert();
-  }, []);
-
+  
   // Pick something at random from everything already loaded on the page.
   function surprise() {
     const pool = [...top10, ...discover, ...shows.map((x) => ({ ...x, media_type: "tv" as const }))];
@@ -133,19 +113,18 @@ export default function HomeClient() {
       <main>
         {/* Hero */}
         <section
-          ref={heroRef}
           className={`relative -mt-16 overflow-hidden ${paused ? "hero-paused" : ""}`}
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
           aria-roledescription="carousel"
           aria-label="Trending movies"
         >
-          <div className="relative min-h-[600px] pt-16 sm:min-h-[680px]">
-            <div ref={heroBgRef} className="absolute inset-0 will-change-transform">
+          <div className="relative min-h-[540px] pt-16 sm:min-h-[620px]">
+            <div className="absolute inset-0">
             {trending.map((m, i) => (
               <img
                 key={m.id}
-                src={backdrop(m.backdrop_path, "original")}
+                src={backdrop(m.backdrop_path, "w1280")}
                 alt=""
                 className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${i === heroIndex ? "opacity-100" : "opacity-0"}`}
                 loading={i === 0 ? "eager" : "lazy"}
@@ -153,29 +132,27 @@ export default function HomeClient() {
             ))}
             </div>
 
-            <div className="absolute inset-0 bg-gradient-to-r from-ink/95 via-ink/55 to-ink/0" />
+            <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/40 to-ink/0" />
             <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/0 to-ink/0" />
 
-            <div className="relative mx-auto flex min-h-[600px] max-w-[1280px] items-end px-4 pb-24 sm:min-h-[680px] sm:px-5 sm:pb-20">
-              <div className="grid w-full items-end gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
+            <div className="relative mx-auto flex min-h-[540px] max-w-[1280px] items-end px-4 pb-24 sm:min-h-[620px] sm:px-5 sm:pb-20">
+              <div className="w-full">
                 <div key={hero?.id ?? "empty"} className={`max-w-3xl ${hero ? "fade-in" : ""}`}>
                   {hero ? (
-                    <p className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-semibold text-white/80">
-                      <span className="text-gold-400">#{heroIndex + 1} trending</span>
-                      <span className="text-white/30">|</span>
+                    <p className="mb-4 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-sm text-white/70">
                       <span>Movie</span>
-                      {yearOf(hero) ? <><span className="text-white/30">|</span><span>{yearOf(hero)}</span></> : null}
+                      {yearOf(hero) ? <><span className="text-white/25">·</span><span>{yearOf(hero)}</span></> : null}
                       {hero.vote_average ? (
                         <>
-                          <span className="text-white/30">|</span>
-                          <span className="inline-flex items-center gap-1"><Star size={13} weight="fill" className="text-gold-400" />{hero.vote_average.toFixed(1)}</span>
+                          <span className="text-white/25">·</span>
+                          <span className="inline-flex items-center gap-1.5 text-gold-400"><Star size={13} weight="fill" />{hero.vote_average.toFixed(1)}</span>
                         </>
                       ) : null}
                     </p>
                   ) : null}
 
                   {hero ? (
-                    <h1 className="text-balance text-[clamp(3.2rem,11vw,8.5rem)]">{titleOf(hero)}</h1>
+                    <h1 className="text-balance text-[clamp(2.4rem,6vw,4.75rem)]">{titleOf(hero)}</h1>
                   ) : (
                     <div className="skeleton h-24 w-3/4 rounded-md" />
                   )}
@@ -198,28 +175,6 @@ export default function HomeClient() {
                   </div>
                 </div>
 
-                {/* Up next */}
-                {upNext.length ? (
-                  <div className="hidden lg:block">
-                    <p className="mb-2 text-sm font-semibold text-white/60">Up next</p>
-                    <ul className="border-t border-white/15">
-                      {upNext.map((m) => (
-                        <li key={m.id} className="border-b border-white/15">
-                          <button
-                            onClick={() => setHeroIndex(trending.findIndex((t) => t.id === m.id))}
-                            className="group flex w-full items-center gap-3 py-3 text-left"
-                          >
-                            <img src={poster(m.poster_path, "w185")} alt="" className="h-[66px] w-11 shrink-0 rounded-[3px] object-cover" />
-                            <span className="min-w-0 flex-1">
-                              <span className="line-clamp-1 text-sm font-semibold text-white transition-colors group-hover:text-gold-400">{titleOf(m)}</span>
-                              <span className="mt-0.5 block text-xs text-white/50">{yearOf(m)}</span>
-                            </span>
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
               </div>
             </div>
 
@@ -312,7 +267,7 @@ export default function HomeClient() {
         ) : !loaded ? (
           <div className="mx-auto flex max-w-[1280px] gap-3 overflow-hidden px-4 py-7 sm:px-5">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="skeleton aspect-[2/3] w-[132px] shrink-0 rounded-[4px] sm:w-[168px]" />
+              <div key={i} className="skeleton aspect-[2/3] w-[132px] shrink-0 rounded-lg sm:w-[168px]" />
             ))}
           </div>
         ) : null}
@@ -359,7 +314,7 @@ export default function HomeClient() {
           ) : (
             <div className="grid grid-cols-2 gap-x-3 gap-y-7 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
               {Array.from({ length: 12 }).map((_, i) => (
-                <div key={i} className="skeleton aspect-[2/3] rounded-[4px]" />
+                <div key={i} className="skeleton aspect-[2/3] rounded-lg" />
               ))}
             </div>
           )}

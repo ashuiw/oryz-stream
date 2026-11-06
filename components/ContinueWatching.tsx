@@ -63,7 +63,7 @@ export default function ContinueWatching() {
         const pct = Math.min(100, Math.round(r.progress_percent || 0));
         return (
           <Link key={`${r.media_type}-${r.media_id}-${r.season_number}-${r.episode_number}`} href={href} className="poster-card group w-[260px] shrink-0 snap-start sm:w-[300px]">
-            <div className="poster-frame relative aspect-video overflow-hidden rounded-[4px] border border-white/10 bg-surface">
+            <div className="poster-frame relative aspect-video overflow-hidden rounded-lg border border-white/10 bg-surface">
               <img src={backdrop(r.backdrop_path || r.poster_path, "w780")} alt="" className="h-full w-full object-cover" loading="lazy" />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent" />
               <span className="absolute bottom-3 left-3 grid h-9 w-9 place-items-center rounded-full bg-gold-500 text-ink"><Play size={15} /></span>

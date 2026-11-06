@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, Hanken_Grotesk } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
@@ -7,16 +7,9 @@ import { ToastProvider } from "@/components/ui/Toast";
 import BackToTop from "@/components/BackToTop";
 import WhatsNewModal from "@/components/WhatsNewModal";
 
-const archivo = Archivo({
+const geist = Geist({
   subsets: ["latin"],
-  variable: "--font-archivo",
-  display: "swap",
-  axes: ["wdth"],
-});
-
-const hanken = Hanken_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-hanken",
+  variable: "--font-geist",
   display: "swap",
 });
 
@@ -60,7 +53,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${archivo.variable} ${hanken.variable}`}>
+    <html lang="en" className={`${geist.variable}`}>
       <body>
         <ServiceWorkerRegistration />
         <ToastProvider>

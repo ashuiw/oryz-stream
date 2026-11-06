@@ -108,7 +108,7 @@ export default function ScrollRow({
       <div
         ref={ref}
         onScroll={update}
-        className="scrollbar-none -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-4 px-4 pb-3 sm:-mx-5 sm:scroll-px-5 sm:px-5"
+        className="scrollbar-none -mx-4 flex snap-x snap-proximity gap-3 overflow-x-auto scroll-px-4 px-4 pb-3 sm:-mx-5 sm:scroll-px-5 sm:px-5"
       >
         {children}
       </div>

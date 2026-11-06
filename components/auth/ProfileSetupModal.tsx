@@ -48,7 +48,7 @@ export default function ProfileSetupModal({ user, onSaved }: { user: User; onSav
     <div className="fixed inset-0 z-[220] grid place-items-center bg-black/75 p-4 backdrop-blur-xl">
       <form onSubmit={submit} className="w-full max-w-md rounded-lg border border-white/10 bg-ink-2 p-6 shadow-2xl sm:p-8">
         <div className="grid h-12 w-12 place-items-center rounded-lg bg-gold-500 text-ink shadow-lg shadow-gold-500/20"><UserRound size={22} /></div>
-        <p className="mt-6 text-xs font-semibold uppercase tracking-[0.24em] text-white/35">Welcome to Oryz</p>
+        <p className="mt-6 text-sm font-medium text-white/50">Welcome to Oryz</p>
         <h1 className="mt-2 text-3xl font-bold text-white">Create your profile</h1>
         <p className="mt-3 text-sm leading-6 text-white/50">Pick a name for your Oryz profile. You can use it across your library and continue-watching list.</p>
         <label className="mt-6 block text-xs font-medium text-white/55">Profile name</label>

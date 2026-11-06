@@ -49,7 +49,7 @@ export default function StreamingStyles() {
         margin: 9px 0 0;
         font-size: clamp(42px, 6vw, 72px);
         line-height: .96;
-        letter-spacing: -.055em;
+        letter-spacing: -.035em;
         font-weight: 600;
         font-family: var(--font-display);
       }
@@ -76,7 +76,7 @@ export default function StreamingStyles() {
         text-align: center;
       }
       .provider-logo img { width: 100%; height: 100%; object-fit: contain; padding: 9px 16px; display: block; border-radius: 8px; }
-      .provider-logo span { font-weight: 900; letter-spacing: -.045em; line-height: .95; font-size: 19px; }
+      .provider-logo span { font-weight: 700; letter-spacing: -.03em; line-height: .95; font-size: 19px; }
       .provider-logo-large { width: 82px; height: 82px; flex: 0 0 82px; border: 1px solid rgba(255,255,255,.08); border-radius: 8px; background: rgba(255,255,255,.045); }
       .provider-logo-large img { padding: 13px; border-radius: 8px; }
       .provider-logo-large span { font-size: 24px; }
@@ -109,7 +109,7 @@ export default function StreamingStyles() {
       .stream-card-empty { height: 100%; display: grid; place-items: center; color: #666; font-size: 11px; }
 
       .provider-detail-hero { display: flex; align-items: center; gap: 18px; padding: 46px 0 28px; }
-      .provider-detail-title { margin: 6px 0 0; font-size: clamp(36px, 5vw, 58px); line-height: .98; letter-spacing: -.05em; }
+      .provider-detail-title { margin: 6px 0 0; font-size: clamp(36px, 5vw, 58px); line-height: .98; letter-spacing: -.03em; }
       .provider-actions { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
       .type-tabs { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid rgba(255,255,255,.08); border-radius: 8px; background: rgba(255,255,255,.035); }
       .type-tabs button { border: 0; color: rgba(255,255,255,.42); background: transparent; border-radius: 9px; padding: 10px 16px; cursor: pointer; font: 600 12px inherit; }

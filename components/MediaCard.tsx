@@ -16,7 +16,7 @@ export default function MediaCard({ item }: { item: Media }) {
         className="poster-card group block w-full min-w-0 text-left"
         aria-label={`${titleOf(item)}, ${type === "tv" ? "show" : "movie"}${yearOf(item) ? `, ${yearOf(item)}` : ""}`}
       >
-        <div className="poster-frame relative aspect-[2/3] overflow-hidden rounded-[4px] border border-white/10 bg-surface">
+        <div className="poster-frame relative aspect-[2/3] overflow-hidden rounded-lg border border-white/10 bg-surface">
           <img src={poster(item.poster_path)} alt="" className="h-full w-full object-cover" loading="lazy" />
 
           <div className="absolute inset-0 flex items-end bg-ink/0 p-3 opacity-0 transition duration-200 group-hover:bg-ink/55 group-hover:opacity-100 group-focus-visible:bg-ink/55 group-focus-visible:opacity-100">

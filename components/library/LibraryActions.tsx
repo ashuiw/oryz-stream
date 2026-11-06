@@ -11,7 +11,7 @@ import GoogleSignInButton from "@/components/auth/GoogleSignInButton";
 
 type Row = { liked: boolean; watch_later: boolean };
 
-export default function LibraryActions({ item, type: forcedType }: { item: Media; type?: "movie" | "tv" }) {
+export default function LibraryActions({ item, type: forcedType, compact = false }: { item: Media; type?: "movie" | "tv"; compact?: boolean }) {
   const { user } = useAuth();
   const toast = useToast();
   const supabase = createClient();
@@ -61,17 +61,30 @@ export default function LibraryActions({ item, type: forcedType }: { item: Media
     setBusy(false);
   }
 
+  const base = compact
+    ? "inline-flex h-12 items-center justify-center gap-2 rounded-lg border px-3.5 text-sm font-medium transition sm:px-4"
+    : "inline-flex items-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium transition";
+  const on = "border-gold-500/60 bg-gold-500/10 text-gold-300";
+  const off = "border-white/15 text-white/75 hover:border-white/40 hover:text-white";
+
   return (
-    <div>
-      <div className="flex flex-wrap gap-2">
-        <button disabled={busy} onClick={() => toggle("liked")} className={`inline-flex items-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium transition ${row.liked ? "border-gold-400/40 bg-gold-400/15 text-gold-200" : "border-white/10 bg-white/[0.04] text-white/65 hover:text-white"}`}>
-          <Heart size={15} fill={row.liked ? "currentColor" : "none"} /> {row.liked ? "Liked" : "Like"}
+    <div className={compact ? "contents" : ""}>
+      <div className={compact ? "contents" : "flex flex-wrap gap-2"}>
+        <button disabled={busy} onClick={() => toggle("liked")} aria-pressed={row.liked} aria-label={row.liked ? "Remove from likes" : "Like"} className={`${base} ${row.liked ? on : off}`}>
+          <Heart size={18} weight={row.liked ? "fill" : "regular"} />
+          <span className={compact ? "hidden sm:inline" : ""}>{row.liked ? "Liked" : "Like"}</span>
         </button>
-        <button disabled={busy} onClick={() => toggle("watch_later")} className={`inline-flex items-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium transition ${row.watch_later ? "border-gold-400/40 bg-gold-400/15 text-gold-200" : "border-white/10 bg-white/[0.04] text-white/65 hover:text-white"}`}>
-          <Bookmark size={15} fill={row.watch_later ? "currentColor" : "none"} /> {row.watch_later ? "Saved" : "Watch later"}
+        <button disabled={busy} onClick={() => toggle("watch_later")} aria-pressed={row.watch_later} aria-label={row.watch_later ? "Remove from watch later" : "Watch later"} className={`${base} ${row.watch_later ? on : off}`}>
+          <Bookmark size={18} weight={row.watch_later ? "fill" : "regular"} />
+          <span className={compact ? "hidden sm:inline" : ""}>{row.watch_later ? "Saved" : "Watch later"}</span>
         </button>
       </div>
-      {notice ? <div className="mt-3 rounded-md border border-white/10 bg-white/[0.03] p-3 text-xs text-white/55"><div className="mb-2 flex items-center gap-2"><LogIn size={13} />{notice}</div><GoogleSignInButton className="px-3 py-2 text-xs" /></div> : null}
+      {notice ? (
+        <div className="basis-full rounded-lg border border-white/10 p-3 text-sm text-white/65">
+          <div className="mb-3 flex items-center gap-2"><LogIn size={16} />{notice}</div>
+          <GoogleSignInButton />
+        </div>
+      ) : null}
     </div>
   );
 }
